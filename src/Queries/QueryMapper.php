@@ -3,6 +3,7 @@
 namespace Storm\Query\Queries;
 
 use Exception;
+use InvalidArgumentException;
 use Storm\Query\Mapper\Map;
 use Storm\Query\Mapper\Mapper;
 
@@ -13,6 +14,8 @@ class QueryMapper
     public function addRelationshipMap(Map $map, $l, $r): void
     {
         $map->isRelationship() or throw new Exception("Map doesn't describe relationship. Use Map::many or Map::one");
+        $this->from?->getTable()->hasAlias() or throw new InvalidArgumentException("Join table {$map->getTable()->table} doesn't have alias");
+        $map->getTable()->hasAlias() or throw new InvalidArgumentException("Join table {$map->getTable()->table} doesn't have alias");
         $alias = "";
         list($lAlias,) = explode('.', trim($l));
         list($rAlias,) = explode('.', trim($r));
@@ -22,15 +25,49 @@ class QueryMapper
         if ($rAlias == $map->getTable()->alias) {
             $alias = $lAlias;
         }
-        foreach($this->from->getAllMaps() as $m) {
-            if ($m->getTable()->alias == $alias) {
-                $m->addRelationshipMap($map);
+        $this->addMapToParentMapByAlias($map, $alias);
+    }
+
+    private function addMapToParentMapByAlias(Map $map, string $alias): void
+    {
+        $found = $this->findMapByAlias($alias);
+        if ($found->isPlainJoin()) {
+            $alias = $found->getTable()->alias;
+            $found = $this->findJoinParent($alias);
+            $this->addMapToParentMapByAlias($map, $found->getTable()->alias);
+        }
+        else {
+            $found->addRelationshipMap($map);
+        }
+    }
+
+    private function findJoinParent(string $alias): Map
+    {
+        foreach($this->from->getAllMaps() as $parent) {
+            foreach($parent->getPlainJoins() as $join) {
+                if ($join->getTable()->alias == $alias) {
+                    return $parent;
+                }
             }
         }
+
+        throw new InvalidArgumentException("Alias {$alias} doesn't refers any join table");
+    }
+
+    private function findMapByAlias(string $alias): Map
+    {
+        foreach($this->from->getAllMaps() as $m) {
+            if ($m->getTable()->alias == $alias) {
+                return $m;
+            }
+        }
+
+        throw new Exception("Alias `{$alias}` has no mapped table");
     }
 
     public function addFromMap(Map $map): void
     {
+        !$map->isRelationship() or throw new Exception("Use Map::create to map root table");
         $this->from  = $map;
     }
 

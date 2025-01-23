@@ -52,6 +52,7 @@ CREATE TABLE customers
     country       varchar(255) DEFAULT NULL
 );
 
+
 CREATE TABLE products
 (
     product_id   int NOT NULL,
@@ -61,6 +62,7 @@ CREATE TABLE products
     unit         varchar(255)  DEFAULT NULL,
     price        decimal(5, 2) DEFAULT NULL
 );
+
 
 CREATE TABLE employees
 (

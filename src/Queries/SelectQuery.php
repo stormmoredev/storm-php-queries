@@ -7,6 +7,7 @@ use Storm\Query\Mapper\Map;
 use Storm\Query\ParameterNormalizer;
 use Storm\Query\Sql\SqlSelectBuilder;
 use Storm\Query\Table;
+use InvalidArgumentException;
 
 class SelectQuery
 {
@@ -35,24 +36,30 @@ class SelectQuery
         return $this;
     }
 
-    public function leftJoin(string $table, $l, $r, Map $map = null): SelectQuery
+    public function leftJoin(string $table, string $l, string $r, Map $map = null): SelectQuery
     {
-        if ($map !== null) {
-            $map->setTable(new Table($table));
-            $this->queryMapper->addRelationshipMap($map, $l, $r);
-        }
+        $this->addRelationshipMap($table, $map, $l, $r);
         $this->selectQuery->leftJoin('', $table, $l, $r);
         return $this;
     }
 
-    public function leftOuterJoin(string $table, $l, $r, Map $map = null): SelectQuery
+    public function leftOuterJoin(string $table, string $l, string $r, Map $map = null): SelectQuery
     {
-        if ($map !== null) {
-            $map->setTable(new Table($table));
-            $this->queryMapper->addRelationshipMap($map, $l, $r);
-        }
+        $this->addRelationshipMap($table, $map, $l, $r);
         $this->selectQuery->leftJoin('OUTER', $table, $l, $r);
         return $this;
+    }
+
+    private function addRelationshipMap(string $tableExpression, ?Map $map, string $l, string $r): void
+    {
+        $rootMap = $this->queryMapper->getFromMap();
+        !($map == null and $rootMap != null) or throw new InvalidArgumentException("Map for join is required");
+        !($map != null and $rootMap == null) or throw new InvalidArgumentException("Map for root table (from) is required");
+
+        if ($map !== null) {
+            $map->setTable(new Table($tableExpression));
+            $this->queryMapper->addRelationshipMap($map, $l, $r);
+        }
     }
 
     public function whereString(string $whereCondition, array $parameters): SelectQuery

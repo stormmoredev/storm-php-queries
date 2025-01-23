@@ -2,10 +2,8 @@
 
 namespace data\models;
 
-class Product
+class Tag
 {
     public int $id;
     public string $name;
-    public int $quantity;
-    public array $tags;
 }

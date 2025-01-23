@@ -12,5 +12,5 @@ class OrderWithTypedProps
 
     public ShipperWithTypedProps $shipper;
 
-    public array $products;
+    public array $details;
 }

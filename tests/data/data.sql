@@ -837,6 +837,13 @@ INSERT INTO order_details (order_detail_id, order_id, product_id, quantity) VALU
     (517, 10443, 11, 6),
     (518, 10443, 28, 12);
 
+INSERT INTO tags(tag_id, name) VALUES
+                                   (1, "sale"),
+                                   (2, "hot"),
+                                   (3, "new"),
+                                   (4, "cheap"),
+                                   (5, "premium");
+
 INSERT INTO products (product_id, product_name, supplier_id, category_id, unit, price) VALUES
     (1, 'Chais', 1, 1, '10 boxes x 20 bags', 18),
     (2, 'Chang', 1, 1, '24 - 12 oz bottles', 19),
@@ -916,7 +923,14 @@ INSERT INTO products (product_id, product_name, supplier_id, category_id, unit, 
 (76, 'Lakkalikööri', 23, 1, '500 ml', 18),
 (77, 'Original Frankfurter grüne Soße', 12, 2, '12 boxes', 13);
 
-
+INSERT INTO products_tags VALUES
+                              (1, 1),
+                              (1, 2),
+                              (2, 1),
+                              (2, 2),
+                              (2, 3),
+                              (3, 5),
+                              (46, 4);
 
 INSERT INTO shippers (shipper_id, shipper_name, phone) VALUES
 (1, 'Speedy Express', '(503) 555-9831'),

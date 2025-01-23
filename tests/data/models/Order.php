@@ -13,4 +13,5 @@ class Order
     public Shipper $shipper;
 
     public array $products;
+    public array $details;
 }

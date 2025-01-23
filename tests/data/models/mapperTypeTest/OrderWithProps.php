@@ -12,5 +12,5 @@ class OrderWithProps
 
     public $shipper;
 
-    public $products;
+    public $details;
 }

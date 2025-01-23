@@ -18,7 +18,11 @@ class Map
     /**
      * @var Map[]
      */
-    private array $oneToOne = [];
+    private array $oneToOne = []
+    /**
+     * @var Map[]
+     */;
+    private array $plainJoins = [];
     private string $type = "";
     private string $property = "";
 
@@ -28,6 +32,13 @@ class Map
         $map['columns'] = $columns;
         $map['class'] = $class;
         $map['id'] = $classId;
+        return self::createFromArray($map);
+    }
+
+    public static function join(): Map
+    {
+        $map = [];
+        $map['type'] = 'join';
         return self::createFromArray($map);
     }
 
@@ -81,8 +92,14 @@ class Map
 
     public function isRelationship(): bool
     {
-        return $this->type === "one" or $this->type === 'many';
+        return $this->type === "one" or $this->type === 'many' or $this->type === 'join';
     }
+
+    public function isPlainJoin(): bool
+    {
+        return $this->type === "join";
+    }
+
     public function addRelationshipMap(Map $map): void
     {
         if ($map->type === "many") {
@@ -90,6 +107,9 @@ class Map
         }
         if ($map->type === "one") {
             $this->oneToOne[] = $map;
+        }
+        if ($map->type === "join") {
+            $this->plainJoins[] = $map;
         }
     }
 
@@ -140,6 +160,14 @@ class Map
         return $this->oneToMany;
     }
 
+    /**
+     * @return Map[]
+     */
+    public function getPlainJoins(): array
+    {
+        return $this->plainJoins;
+    }
+
     public function getProperty(): string
     {
         return $this->property;
@@ -168,6 +196,10 @@ class Map
 
         foreach($this->oneToOne as $key => $oneToOneMap) {
             $maps = array_merge($maps, $oneToOneMap->findRecursivelyMaps($oneToOneMap));
+        }
+
+        foreach($this->plainJoins as $key => $joinMap) {
+            $maps = array_merge($maps, $joinMap->findRecursivelyMaps($joinMap));
         }
         return $maps;
     }

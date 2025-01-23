@@ -13,7 +13,7 @@ class OrderWithTypedInitProps
 
     public ShipperWithTypedInitProps $shipper;
 
-    public array $products = array();
+    public array $details = array();
 
     public function __construct()
     {

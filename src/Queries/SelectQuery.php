@@ -20,13 +20,19 @@ class SelectQuery
         $this->selectQuery = new SqlSelectBuilder();
     }
 
-    public function from(string $table, Map $map = null): SelectQuery
+    public function from(string|SubQuery $set, Map $map = null): SelectQuery
     {
         if ($map !== null) {
-            $map->setTable(new Table($table));
+            $map->setTable(new Table($set));
             $this->queryMapper->addFromMap($map);
         }
-        $this->selectQuery->from($table);
+        if ($set instanceof SubQuery) {
+            $this->selectQuery->from("(" . $set->query->getSql() . ")" . " as " . $set->alias);
+        }
+        else {
+            $this->selectQuery->from($set);
+        }
+
         return $this;
     }
 
@@ -36,28 +42,28 @@ class SelectQuery
         return $this;
     }
 
-    public function leftJoin(string $table, string $l, string $r, Map $map = null): SelectQuery
+    public function leftJoin(string|SubQuery $set, string $l, string $r, Map $map = null): SelectQuery
     {
-        $this->addRelationshipMap($table, $map, $l, $r);
-        $this->selectQuery->leftJoin('', $table, $l, $r);
+        $this->addRelationshipMap($set, $map, $l, $r);
+        $this->selectQuery->leftJoin('INNER', $set, $l, $r);
         return $this;
     }
 
-    public function leftOuterJoin(string $table, string $l, string $r, Map $map = null): SelectQuery
+    public function leftOuterJoin(string|SubQuery  $set, string $l, string $r, Map $map = null): SelectQuery
     {
-        $this->addRelationshipMap($table, $map, $l, $r);
-        $this->selectQuery->leftJoin('OUTER', $table, $l, $r);
+        $this->addRelationshipMap($set, $map, $l, $r);
+        $this->selectQuery->leftJoin('OUTER', $set, $l, $r);
         return $this;
     }
 
-    private function addRelationshipMap(string $tableExpression, ?Map $map, string $l, string $r): void
+    private function addRelationshipMap(string|SubQuery $set, ?Map $map, string $l, string $r): void
     {
         $rootMap = $this->queryMapper->getFromMap();
         !($map == null and $rootMap != null) or throw new InvalidArgumentException("Map for join is required");
         !($map != null and $rootMap == null) or throw new InvalidArgumentException("Map for root table (from) is required");
 
         if ($map !== null) {
-            $map->setTable(new Table($tableExpression));
+            $map->setTable(new Table($set));
             $this->queryMapper->addRelationshipMap($map, $l, $r);
         }
     }

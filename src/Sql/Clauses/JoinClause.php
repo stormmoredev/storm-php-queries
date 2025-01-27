@@ -2,13 +2,15 @@
 
 namespace Storm\Query\Sql\Clauses;
 
+use Storm\Query\Queries\SubQuery;
+
 class JoinClause
 {
     private array $joins = [];
 
-    public function addLeftJoin(string $type, string $table, string $columnA, string $columnB): void
+    public function addLeftJoin(string $type, string|SubQuery $set, string $columnA, string $columnB): void
     {
-        $this->joins[] = [$type, $table, $columnA, $columnB];
+        $this->joins[] = [$type, $set, $columnA, $columnB];
     }
 
     public function hasJoines(): bool
@@ -30,7 +32,12 @@ class JoinClause
                 $joinString .= "OUTER ";
             }
             $joinString .= "JOIN ";
-            $joinString .= "$join[1] ON $join[2] = $join[3]";
+            if ($join[1] instanceof SubQuery) {
+                $joinString .= "(" . $join[1]->query->getSql() . ") " . $join[1]->alias . " ON $join[2] = $join[3]";
+            }
+            else {
+                $joinString .= "$join[1] ON $join[2] = $join[3]";
+            }
             $joins[] = $joinString;
         }
         return implode("\n", $joins);

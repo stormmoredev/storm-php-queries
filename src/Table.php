@@ -3,6 +3,7 @@
 namespace Storm\Query;
 
 use InvalidArgumentException;
+use Storm\Query\Queries\SubQuery;
 
 class Table
 {
@@ -10,8 +11,12 @@ class Table
     public string $table;
     public string $alias = "";
 
-    public function __construct(string $expression)
+    public function __construct(string|SubQuery $expression)
     {
+        if ($expression instanceof SubQuery) {
+            $this->alias = $expression->alias;
+            return;
+        }
         $this->expression = $expression = trim($expression);
         $spaces = substr_count($expression, ' ');
         $spaces < 2 or throw new InvalidArgumentException("Invalid table name '$this->expression'");

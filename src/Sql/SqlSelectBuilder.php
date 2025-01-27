@@ -3,6 +3,7 @@
 namespace Storm\Query\Sql;
 
 use Storm\Query\Mapper\Map;
+use Storm\Query\Queries\SubQuery;
 use Storm\Query\Sql\Clauses\ConditionalClause;
 use InvalidArgumentException;
 use Storm\Query\Sql\Clauses\JoinClause;
@@ -48,15 +49,9 @@ class SqlSelectBuilder
         return $this;
     }
 
-    public function leftJoin(string $type, string $table, $l, $r): SqlSelectBuilder
+    public function leftJoin(string $type, string|SubQuery $set, $l, $r): SqlSelectBuilder
     {
-        $this->joinClause->addLeftJoin($type, $table, $l, $r);
-        return $this;
-    }
-
-    public function leftOuterJoin(string $type, string $table, $l, $r): SqlSelectBuilder
-    {
-        $this->joinClause->addLeftJoin('outer', $table, $l, $r);
+        $this->joinClause->addLeftJoin($type, $set, $l, $r);
         return $this;
     }
 

@@ -6,6 +6,7 @@ use Storm\Query\Mapper\Map;
 use Storm\Query\Queries\DeleteQuery;
 use Storm\Query\Queries\InsertQuery;
 use Storm\Query\Queries\SelectQuery;
+use Storm\Query\Queries\SubQuery;
 use Storm\Query\Queries\UpdateQuery;
 
 readonly class StormQueries
@@ -39,7 +40,7 @@ readonly class StormQueries
         return $selectQuery;
     }
 
-    public function from(string $table, mixed ...$parameters): SelectQuery
+    public function from(string|SubQuery $set, mixed ...$parameters): SelectQuery
     {
         $map = null;
         $whereString = null;
@@ -54,7 +55,7 @@ readonly class StormQueries
 
         $selectQuery = new SelectQuery($this->connection);
         $selectQuery->select('*');
-        $selectQuery->from($table, $map);
+        $selectQuery->from($set, $map);
         if (!empty($whereString)) {
             $selectQuery->whereString($whereString, $parameters);
         }

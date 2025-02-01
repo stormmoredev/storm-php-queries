@@ -26,7 +26,7 @@ class Map
     private string $type = "";
     private string $property = "";
 
-    public static function create(array $columns = [], string $class = 'stdClass', string $classId = 'id'): Map
+    public static function from(array $columns = [], string $class = 'stdClass', string $classId = 'id'): Map
     {
         $map = [];
         $map['columns'] = $columns;

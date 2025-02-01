@@ -24,7 +24,7 @@ class JoinTest extends TestCase
         $this->expectException(InvalidArgumentException::class);
 
         $this->queries
-            ->from('customers',  Map::create([
+            ->from('customers',  Map::from([
                 'customer_id' => 'id',
                 'customer_name' => 'name'
             ]))
@@ -38,7 +38,7 @@ class JoinTest extends TestCase
         $this->expectException(InvalidArgumentException::class);
 
         $this->queries
-            ->from('customers c',  Map::create([
+            ->from('customers c',  Map::from([
                 'customer_id' => 'id',
                 'customer_name' => 'name'
             ]))
@@ -63,7 +63,7 @@ class JoinTest extends TestCase
         $this->expectException(InvalidArgumentException::class);
 
         $this->queries
-            ->from('customers c',  Map::create([
+            ->from('customers c',  Map::from([
                 'customer_id' => 'id',
                 'customer_name' => 'name'
             ]))
@@ -73,7 +73,7 @@ class JoinTest extends TestCase
     public function testManyToManyJoin(): void
     {
         $products = $this->queries
-            ->from('products p', Map::create([
+            ->from('products p', Map::from([
                 'product_id' => 'id',
                 'product_name' => 'name'
             ]))
@@ -94,7 +94,7 @@ class JoinTest extends TestCase
     public function testAllJoinTypesInOneQuery(): void
     {
         $customer = $this->queries
-            ->from('customers c',  Map::create([
+            ->from('customers c',  Map::from([
                 'customer_id' => 'id',
                 'customer_name' => 'name'
             ]))
@@ -143,7 +143,7 @@ class JoinTest extends TestCase
     public function testAllJoinTypesInOneQueryWithTypes(): void
     {
         $customer = $this->queries
-            ->from('customers c',  Map::create([
+            ->from('customers c',  Map::from([
                 'customer_id' => 'id',
                 'customer_name' => 'name'
             ], Customer::class))

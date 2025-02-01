@@ -12,7 +12,7 @@ class MapTest extends  TestCase
     public function testThrowExceptionWhenClassDoesNotExist(): void
     {
         $this->expectException(InvalidArgumentException::class);
-        Map::create([
+        Map::from([
             'user_id' => 'id',
             'user_name' => 'name'
         ], 'NotExistingClass');
@@ -20,7 +20,7 @@ class MapTest extends  TestCase
 
     public function testMapFromWithArrayParameters(): void
     {
-        $map = Map::create([
+        $map = Map::from([
             'user_id' => 'id',
             'user_name' => 'name'
         ]);
@@ -31,7 +31,7 @@ class MapTest extends  TestCase
 
     public function testMapFromWithClassName(): void
     {
-        $map = Map::create(class: Customer::class);
+        $map = Map::from(class: Customer::class);
 
         $this->assertInstanceOf(Map::class, $map);
         $this->assertEquals('data\models\Customer', $map->getClassName());
@@ -39,7 +39,7 @@ class MapTest extends  TestCase
 
     public function testMapFromWithClassNameAndParameters(): void
     {
-        $map = Map::create([
+        $map = Map::from([
             'user_id' => 'id'
         ], Customer::class);
 
@@ -50,7 +50,7 @@ class MapTest extends  TestCase
 
     public function testMapFromWithClassNameKeyAndParameters(): void
     {
-        $map = Map::create([
+        $map = Map::from([
             'user_id' => 'id'
         ], Customer::class, 'user_id');
 

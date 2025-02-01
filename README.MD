@@ -3,22 +3,20 @@
 It's mix of query builder and ORM made to fetch data in most effective way.\
 Intuitive, easy to learn light yet powerful tool.
 If you work with ORMs you will notice that you don't have to configure nothing but still you 
-have possilbity to build easilly queries and retrieve in hierarchical manner. 
+have possilbity to build easilly queries and retrieve in hierarchical way. 
 
 Most interesting features
 - hierarchical models (biggest advantage of ORM without disadvantages of over-configuration etc.)
-- working with existing schema
-- no need to change anything in your models (keep DDD aggregates clean)
 - query builder supporting assembling queries (support criteria-finder pattern for modern architectures)
-- handle sub queries
+- subqueries
 - no configuration needed
-- fluent api
-- short version of api for simple queries 
-- supports various databases(tested with PostgreSql, MySql, MariaDB, MSSQL, SQLite)
+- no need to describe db schema
 - lightweight and tidy code (no additional dependencies)
-- efficiency - it's really thin layer over simple query 
+- supports various databases (tested with PostgreSql, MySql, MariaDB, MSSQL, SQLite)
+- fluent api
+- no need to change your models (keep DDD aggregates clean)
 - developer friendly (profiling queries, overview of generated sql)
-- intuitive and flexible. You can use it as query builder and assembly queries or use simple string conditions
+- intuitive and flexible
 
 <a name="index"></a>
 * [1. Quick start](#quickstart)
@@ -33,15 +31,15 @@ Most interesting features
   * [Mapping data to hierarchical model](#mapping)
   * [Assembling query and critera-finder pattern](#assemblingqueries)
 * [3. ORM](#orm)
-* [3. Insert query](#insertquery)
-* [4. Update query](#updatequery)
-* [5. Delete query](#deletequery)
-* [5. Profiling nad logging queries](#profiling)
-* [6. Notice](#notice)
-* [7. Tests](#btests)
-* [8. Examples](#examples)
-* [9. Author](#author)
-* [10. License ](#license)
+* [4. Insert query](#insertquery)
+* [5. Update query](#updatequery)
+* [6. Delete query](#deletequery)
+* [7. Profiling nad logging queries](#profiling)
+* [8. Notice](#notice)
+* [9. Tests](#btests)
+* [10. Examples](#examples)
+* [11. Author](#author)
+* [12. License ](#license)
 
 <a name="quickstart"></a>
 ## Quick start
@@ -76,7 +74,7 @@ $connection = ConnectionFactory::createFromString(
 $queries = new StormQueries($connection);
 
 $queries
-  ->from('customers c',  Map::create([
+  ->from('customers c',  Map::from([
       'customer_id' => 'id',
       'customer_name' => 'name'
   ]))
@@ -96,8 +94,7 @@ $queries
       'product_name' => 'name',
       'price' => 'price'
   ]))
-  ->where('c.customer_id', 7)
-  ->find();
+  ->findAll();
      
 foreach($customers as $customer) {
     print_customer($customer);
@@ -110,13 +107,13 @@ foreach($customers as $customer) {
 }                   
 ```
 
-<a name="block2"></a>
-## Select query [↑](#index_block)
+<a name="selectquery"></a>
+## Select query
 
 Build select query with `from` method
 
 ```php
-$stormQueries->from('tableName', 'id = ?', 2)->findOne();
+$stormQueries->from('tableName', 'id = ?', 2)->find();
 ```
 Build it with fluent API
 ```php
@@ -124,7 +121,7 @@ $stormQueries
     ->select("column1", "column2", "column3")
     ->from('tableName')
     ->where('id', 2);
-    ->findOne();
+    ->find();
 ```
 
 StormQueries is made to handle assembling queries step by step in various scenarios so every time you invoke methods like\
@@ -145,17 +142,16 @@ $stormQueries->select('columnA')->select('columnB')->select('columnC');
 ```
 builds `SELECT columnA, columnB, columnC`
 
-### Short select [↑](#index)
+### Short select
 ```php
 $stormQueries->from('customers')->find();
 $stormQueries->from('customers', 'name LIKE ? AND city = ?', 'M%' 'London')->find();
-$stormQueries->from('customers', 'id = ?', 14]->findOne();
-$stormQueries->from('customers')->where('id', 14)->findOne();
+$stormQueries->from('customers', 'id = ?', 14]->find();
+$stormQueries->from('customers')->where('id', 14)->find();
 ```
 
-### Aggregation functions [↑](#index)
-
-Do not use them in sub queries because they immediately fetch data from db.
+### Aggregation functions 
+They immediately return data (scalar value) from db so don't use them in subqueries. Use select instead. 
  ```php
 $stormQueries->from('products', 'category_id = ?', 7)->count();
 $stormQueries->from('products', 'category_id = ?', 7)->min('price');
@@ -164,7 +160,7 @@ $stormQueries->from('products', 'category_id = ?', 7)->sum('price');
 $stormQueries->from('products', 'category_id = ?', 7)->avg('price');
  ```
 
-### Left join [↑](#index)
+### Left join 
 ```php
 $stormQueries
     ->from('tableA')
@@ -173,7 +169,7 @@ $stormQueries
     ->find();
 ```
 
-### Where [↑](#index)
+### Where 
 ```php
 $stormQueries
     ->from('tableA')
@@ -210,9 +206,22 @@ $stormQueries
     });
 ```
 
-### Sub query [↑](#index)
+### SubQueries 
 
-You can pass select query as parameter of where making it sub query.
+#### From
+```php
+$stormQueries
+  ->from(SubQuery::create($this->queries->from('products'), 'p'))
+  ->findAll();
+```
+#### LeftJoin
+```php
+$stormQueries
+  ->from('products p')
+  ->leftJoin(SubQuery::create($this->queries->from('suppliers'), 's'), 's.supplier_id', 'p.supplier_id')
+  ->findAll();
+```
+#### Where
 ```php
 $stormQueries
     ->select('*')
@@ -222,7 +231,7 @@ $stormQueries
     ->where('field5', '=', 9);
 ```
 
-### OrderBy [↑](#index)
+### OrderBy
 ```php
 $stormQueries->from('table')->orderByDesc('column1');
 $stormQueries->from('table')->orderByAsc('column1');
@@ -230,12 +239,12 @@ $stormQueries->from('table')->orderBy('column1', -1); //descending
 $stormQueries->from('table')->orderBy('column1', 1) //ascending
 $stormQueries->from('table')->orderByDesc('column1')->orderByDesc('column2');
 ```
-### GroupBy [↑](#index)
+### GroupBy
 ```php
 $stormQueries->from('table')->groupBy('column1', 'column2');
 $stormQueries->from('table')->groupBy('column1')->groupBy('column2')->groupBy('column3')
 ```
-### Having [↑](#index)
+### Having 
 Everything what refers to `where` or `orWhere` refers to `having` and `orHaving`
 ```php
 $stormQueries
@@ -245,85 +254,96 @@ $stormQueries
     ->having('count(*)', '>', 1)
     ->having('city', 'LIKE', '%o%')
     ->find();
+``` 
+
+## ORM
+
+To use StormQueries as ORM you need add map in `from` and `join` clause.
+
+### Map
+Map defines
+ - columns and their class mapping properties
+ - class name (by default `stdClass`) 
+ - identity property (by default `id`)
+
+### From
+```php
+$queries
+  ->from('customers', 'customer_id = ?', 28, Map::from([
+      'customer_id' => 'id',
+      'customer_name' => 'name'
+  ]))
+  ->find()
+```
+Query with user class
+```php
+$queries
+  ->from('customers',  Map::from([
+      'customer_id' => 'id',
+      'customer_name' => 'name'
+  ], Customer::class))
+  ->find()
 ```
 
-## Mapping data to hierarchical structure [↑](#index)
+### Joins
 
-In my opinion most interesting part of StormQueries is mapping which allows to work with hierarchical data without any configuration 
-(json, xml, attributes in classes). 
-Only advantages ORMs over query builder I found,  was working with hierarchical models with (in my opinion, heavy) disadvantages of classic solution.\
-This is the reason I decided to build StomQueries library. 
-
-Concept is about creating hierarchical map where you define
-- class you want to map data
-- key to differentiate object id (it have not to be db primary ey)
-- mapping columns to object property
-
-and pass it to `find`/`findOne` method.
-
-In case of e-commerce platform where we would like to fetch some customers with all their orders we could define map like:
+#### OneToOne
 ```php
-$map = Map::create(Customer::class, 'customer_id', [
-    'customer_id' => 'id',
-    'customer_name' => 'name',
-    'address' => 'address',
-    'city' => 'city',
-    'postal_code' => 'postalCode',
-    'country' => 'country'
-])->hasMany('orders',
-    Map::create(Order::class, 'order_id', [
-        'order_id' => 'id',
-        'order_date' => 'date',
-    ])
-    ->hasMany('products',
-        Map::create(Product::class, 'product_id', [
-            'product_id' => 'id',
-            'product_name' => 'name',
-            'quantity' => 'quantity'])
-    )
-    ->hasOne('shipper',
-        Map::create(Shipper::class, 'shipper_id', [
-            'shipper_id' => 'id',
-            'shipper_name' => 'name'])
-    )
-);
+$orders = $queries
+  ->from('orders o', Map::from("orders", [
+    'order_id' => 'id',
+    'order_date' => 'date'
+  ]))
+  ->leftJoin('shippers sh', 'sh.shipper_id', 'o.shipper_id', Map::one('shipper', [
+          'shipper_id' => 'id',
+          'shipper_name' => 'name'
+  ]))
+  ->findAll();
 
-$customers = $stormQueries
-    ->select(
-        'c.customer_id', 'c.customer_name', 'c.address', 'c.city', 'c.postal_code', 'c.country',
-        'o.employee_id', 'o.order_id', 'o.order_date',
-        's.shipper_name', 's.shipper_id',
-        'od.quantity', 'od.product_id',
-        'p.product_name')
-    ->from('customers c')
-    ->leftJoin('orders o', 'o.customer_id', 'c.customer_id')
-    ->leftJoin('shippers s', 's.shipper_id', 'o.shipper_id')
-    ->leftJoin('order_details od', 'od.order_id', 'o.order_id')
-    ->leftJoin('products p', 'p.product_id', 'od.product_id')
-    ->orderByAsc('c.customer_id')
-    ->find($map);
-
-foreach($customers as $customer) {
-    print_customer($customer);
-    foreach($customer->orders as $order) {
-        print_order($order)
-        foreach($order->products as $product) {
-            print_order_products($product);
-        }
-    }
+foreach($orders as $order) {
+    print_order($order);
+    print_shipper($order->shipper);
 }
 ```
 
-Code above is taken from integration test in `test/integration/MapperTest.php`
 
-## Assembling query and critera-finder pattern [↑](#index)
+#### OneToMany
+```php
+$queries
+  ->from('customers c',  Map::from([
+      'customer_id' => 'id',
+      'customer_name' => 'name'
+  ]))
+  ->leftJoin('orders o', 'o.customer_id', 'c.customer_id', Map::many("orders", [
+          'order_id' => 'id'
+  ]))
+```
+#### ManyToMany
+```php
+$queries
+  ->from('products p', Map::from([
+      'product_id' => 'id',
+      'product_name' => 'name'
+  ]))
+  ->leftJoin('products_tags pt', 'pt.product_id', 'p.product_id', Map::join())
+  ->leftJoin('tags t', 't.tag_id', 'pt.tag_id', Map::many("tags", [
+      'tag_id' => 'id',
+      'name' => 'name'
+  ]))
+  ->where('p.product_id', 'in', [1,2,3,4])
+  ->findAll();
+```
+
+### SubQueries
+
+### Restrictions
+Using joins requires using aliases in `from` and `join` clause.
+
+## Assembling query and critera-finder pattern
 
 ```php 
 function find_products($criteria): array
-{
-    $stormQueries = get_storm_queries();
-    $map = get_product_map();
-       
+{      
     $query = $stormQueries
         ->from('products')
         ->leftJoin('product_photos', 'product_photos.product_id', 'products.id')
@@ -338,7 +358,7 @@ function find_products($criteria): array
         $query->where('description', "LIKE", '%' . $criteria->getPhrase() . '%');
     }
     
-    return $query->find($map);
+    return $query->findAll($map);
 }
 
 $criteria = ProductCriteria::create()
@@ -349,15 +369,8 @@ $criteria = ProductCriteria::create()
 $products = find_products($stormQueries, $criteria);
 ```
 
-## ORM
-opisac ze potrzeba bytu ktory pomapuje dane z zapytania do modelu hierarhicznego tam by stormqueries to wiedzial.
-Dodac dodawanie dla tabela. 
-- ZAprojektowac tak by w mapie byly tabela.columna 
-- dodac mozliwosc dodania prostych mapperow do 
-
 <a name="insertquery"></a>
-## Insert query [↑](#index)
-
+## Insert
 ```php
 $id = $stormQueries->insert('person', ['name' => 'Micheal'])->execute();
 ```
@@ -365,16 +378,19 @@ If you don't want to invoke `getLastInsertedId` on `PDO` pass `false` to `execut
 ```php
 $stormQueries->insert('person', ['name' => 'Micheal'])->execute(false);
 ```
-## Update query [↑](#index)
+
+## Insert many
+
+## Update 
 ```php
 $stormQueries->update('person', ['name' => 'Matthew'])->where('id', 2)->execute();
 ```
-## Delete query [↑](#index)
+## Delete 
 ```php
 $stormQueries->delete('person')->where('id', 1)->execute();
 $stormQueries->delete('person', 'id = ?', 1)->execute();
 ```
-## Profiling nad logging queries [↑](#index)
+## Profiling nad logging queries
 
 To track what queries are going to database add `callback` to `IConnection` object.  
 ```php
@@ -388,23 +404,23 @@ $connection->onFailre(function(string $sql, DateInterval $interval, Exception $e
     //log here
 })
 ```
-## Notice [↑](#index)
+## Notice 
 StormQueries uses PDO and databases which support it.\
 Tested with PostgreSQL, MySQL, MariaDB, SqlServer and Sqlite.
-## Tests [↑](#index)
+## Tests 
 
 To run tests use `docker composer up` and run one of `run.*.cmd`
 
-## Examples [↑](#index)
+## Examples 
 
 If you are looking for more use cases take a look at tests in `test` directory of project.
 
-## Author [↑](#index)
+## Author 
 
 Michał Czerski
 
 If you have any question or ideas you want share with me contact me on GitHub.
 
-## License [↑](#index)
+## License 
 
 StormQueries is licensed under MIT licence.

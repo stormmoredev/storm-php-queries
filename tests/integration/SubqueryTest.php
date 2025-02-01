@@ -84,7 +84,7 @@ class SubqueryTest extends TestCase
     public function testFromSubqueryWithMap(): void
     {
         $items = $this->queries
-            ->from(SubQuery::create($this->queries->from('products'), 'p'), Map::create([
+            ->from(SubQuery::create($this->queries->from('products'), 'p'), Map::from([
                 'product_id' => 'id',
                 'product_name' => 'name'
             ]))
@@ -97,7 +97,7 @@ class SubqueryTest extends TestCase
     public function testLeftJoinSubqueryWithMap(): void
     {
         $items = $this->queries
-            ->from(SubQuery::create($this->queries->from('orders'), 'o'), Map::create([
+            ->from(SubQuery::create($this->queries->from('orders'), 'o'), Map::from([
                 'order_id' => 'id',
                 'order_date' => 'date'
             ]))
@@ -121,7 +121,7 @@ class SubqueryTest extends TestCase
     public function testFromSubqueryWithSubqueryJoinAndMap(): void
     {
         $items = $this->queries
-            ->from(SubQuery::create($this->queries->from('orders'), 'o'), Map::create([
+            ->from(SubQuery::create($this->queries->from('orders'), 'o'), Map::from([
                 'order_id' => 'id',
                 'order_date' => 'date'
             ]))

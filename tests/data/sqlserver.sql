@@ -53,6 +53,12 @@ CREATE TABLE customers
     country       varchar(255) DEFAULT NULL
 );
 
+CREATE TABLE tags
+(
+    tag_id int NOT NULL,
+    name varchar(32)
+);
+
 CREATE TABLE products
 (
     product_id   int NOT NULL,
@@ -61,6 +67,12 @@ CREATE TABLE products
     category_id  int           DEFAULT NULL,
     unit         varchar(255)  DEFAULT NULL,
     price        decimal(5, 2) DEFAULT NULL
+);
+
+CREATE TABLE products_tags
+(
+    product_id int NOT NULL,
+    tag_id int NOT NULL
 );
 
 CREATE TABLE employees

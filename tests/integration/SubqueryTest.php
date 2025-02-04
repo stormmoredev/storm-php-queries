@@ -32,6 +32,7 @@ class SubqueryTest extends TestCase
     {
         $items = $this->queries
             ->from(SubQuery::create($this->queries->from('products'), 'p'))
+            ->orderByAsc('p.product_id')
             ->findAll();
 
         $this->assertCount(77, $items);
@@ -44,6 +45,7 @@ class SubqueryTest extends TestCase
         $items = $this->queries
             ->from(SubQuery::create($this->queries->from('products'), 'p'))
             ->leftJoin('suppliers s', 's.supplier_id', 'p.supplier_id')
+            ->orderByAsc('p.product_id')
             ->findAll();
 
         $this->assertCount(77, $items);
@@ -58,6 +60,7 @@ class SubqueryTest extends TestCase
         $items = $this->queries
             ->from(SubQuery::create($this->queries->from('products'), 'p'))
             ->leftJoin(SubQuery::create($this->queries->from('suppliers'), 's'), 's.supplier_id', 'p.supplier_id')
+            ->orderByAsc('p.product_id')
             ->findAll();
 
         $this->assertCount(77, $items);
@@ -72,6 +75,7 @@ class SubqueryTest extends TestCase
         $items = $this->queries
             ->from('products p')
             ->leftJoin(SubQuery::create($this->queries->from('suppliers'), 's'), 's.supplier_id', 'p.supplier_id')
+            ->orderByAsc('p.product_id')
             ->findAll();
 
         $this->assertCount(77, $items);

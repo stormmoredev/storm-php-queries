@@ -83,6 +83,7 @@ class JoinTest extends TestCase
                 'name' => 'name'
             ]))
             ->where('p.product_id', 'in', [1,2,3,4])
+            ->orderByAsc('p.product_id')
             ->findAll();
 
         $this->assertCount(4, $products);

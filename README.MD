@@ -27,14 +27,14 @@ have possibility to build queries easily and retrieve in hierarchical way.
   * [GroupBy](#groupby)
   * [Having](#having)
 * [3. ORM](#orm)
-* [4. Sub query](#subquery)
+* [4. Sub queries](#subquery)
 * [5. Assembling query](#assemblingquery)
 * [6. Insert query](#insertquery)
 * [7. Update query](#updatequery)
 * [8. Delete query](#deletequery)
 * [9. Profiling nad logging queries](#profiling)
 * [10. Notice](#notice)
-* [11. Tests](#btests)
+* [11. Tests](#tests)
 * [12. Examples](#examples)
 * [13. Author](#author)
 * [14. License ](#license)
@@ -316,7 +316,7 @@ $queries
 ```
 
 <a name="subquery"></a>
-### SubQueries
+### Sub queries
 
 #### from
 ```php

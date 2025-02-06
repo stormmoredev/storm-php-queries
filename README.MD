@@ -23,22 +23,21 @@ have possibility to build queries easily and retrieve in hierarchical way.
   * [Aggregation functions](#aggregatefunctions)
   * [Left join](#leftjoin)
   * [Where](#where)
-  * [Sub query](#where)
   * [OrderBy](#orderby)
   * [GroupBy](#groupby)
   * [Having](#having)
-  * [Mapping data to hierarchical model](#mapping)
-  * [Assembling query and critera-finder pattern](#assemblingqueries)
 * [3. ORM](#orm)
-* [4. Insert query](#insertquery)
-* [5. Update query](#updatequery)
-* [6. Delete query](#deletequery)
-* [7. Profiling nad logging queries](#profiling)
-* [8. Notice](#notice)
-* [9. Tests](#btests)
-* [10. Examples](#examples)
-* [11. Author](#author)
-* [12. License ](#license)
+* [4. Sub query](#subquery)
+* [5. Assembling query](#assemblingquery)
+* [6. Insert query](#insertquery)
+* [7. Update query](#updatequery)
+* [8. Delete query](#deletequery)
+* [9. Profiling nad logging queries](#profiling)
+* [10. Notice](#notice)
+* [11. Tests](#btests)
+* [12. Examples](#examples)
+* [13. Author](#author)
+* [14. License ](#license)
 
 <a name="quickstart"></a>
 ## Quick start
@@ -150,6 +149,7 @@ $stormQueries->from('customers', 'id = ?', 14]->find();
 $stormQueries->from('customers')->where('id', 14)->find();
 ```
 
+<a name="aggregatefunctions"></a>
 ### Aggregation functions 
 
  ```php
@@ -160,6 +160,7 @@ $stormQueries->from('products', 'category_id = ?', 7)->sum('price');
 $stormQueries->from('products', 'category_id = ?', 7)->avg('price');
  ```
 
+<a name="leftjoin"></a>
 ### Left join 
 ```php
 $stormQueries
@@ -169,6 +170,7 @@ $stormQueries
     ->find();
 ```
 
+<a name="where"></a>
 ### Where 
 ```php
 $stormQueries
@@ -206,31 +208,7 @@ $stormQueries
     });
 ```
 
-### SubQueries 
-
-#### From
-```php
-$stormQueries
-  ->from(SubQuery::create($this->queries->from('products'), 'p'))
-  ->findAll();
-```
-#### LeftJoin
-```php
-$stormQueries
-  ->from('products p')
-  ->leftJoin(SubQuery::create($this->queries->from('suppliers'), 's'), 's.supplier_id', 'p.supplier_id')
-  ->findAll();
-```
-#### Where
-```php
-$stormQueries
-    ->select('*')
-    ->from('users')
-    ->where('fieldA', '=', 'val1')
-    ->where('field4', 'IN', $this->queries->select('id')->from('table')->where('col', 14))
-    ->where('field5', '=', 9);
-```
-
+<a name="orderby"></a>
 ### OrderBy
 ```php
 $stormQueries->from('table')->orderByDesc('column1');
@@ -239,11 +217,14 @@ $stormQueries->from('table')->orderBy('column1', -1); //descending
 $stormQueries->from('table')->orderBy('column1', 1) //ascending
 $stormQueries->from('table')->orderByDesc('column1')->orderByDesc('column2');
 ```
+
+<a name="groupby"></a>
 ### GroupBy
 ```php
 $stormQueries->from('table')->groupBy('column1', 'column2');
 $stormQueries->from('table')->groupBy('column1')->groupBy('column2')->groupBy('column3')
 ```
+<a name="having"></a>
 ### Having 
 Everything what refers to `where` or `orWhere` refers to `having` and `orHaving`
 ```php
@@ -256,6 +237,7 @@ $stormQueries
     ->find();
 ``` 
 
+<a name="orm"></a>
 ## ORM
 
 To use StormQueries as ORM you need add map in `from` and `join` clause.
@@ -306,7 +288,6 @@ foreach($orders as $order) {
 }
 ```
 
-
 #### One-to-many relationship
 ```php
 $queries
@@ -334,6 +315,7 @@ $queries
   ->findAll();
 ```
 
+<a name="subquery"></a>
 ### SubQueries
 
 #### from
@@ -374,7 +356,8 @@ $stormQueries
 ### Restrictions
 Using joins requires using aliases in `from` and `join` clause.
 
-## Assembling query and critera-finder pattern
+<a name="assemblingquery"></a>
+## Assembling query
 
 ```php 
 function find_products($criteria): array
@@ -414,7 +397,7 @@ If you don't want to invoke `getLastInsertedId` on `PDO` pass `false` to `execut
 $stormQueries->insert('person', ['name' => 'Micheal'])->execute(false);
 ```
 
-## Insert many
+### Insert many
 ```php
 $stormQueries
 ->insertMany('person', [
@@ -425,15 +408,20 @@ $stormQueries
 ->execute();
 ```
 
+<a name="updatequery"></a>
 ## Update 
 ```php
 $stormQueries->update('person', ['name' => 'Matthew'])->where('id', 2)->execute();
 ```
+
+<a name="deletequery"></a>
 ## Delete 
 ```php
 $stormQueries->delete('person')->where('id', 1)->execute();
 $stormQueries->delete('person', 'id = ?', 1)->execute();
 ```
+
+<a name="profiling"></a>
 ## Profiling nad logging queries
 
 To track what queries are going to database add `callback` to `IConnection` object.  
@@ -448,23 +436,30 @@ $connection->onFailre(function(string $sql, DateInterval $interval, Exception $e
     //log here
 })
 ```
+
+<a name="notice"></a>
 ## Notice 
 StormQueries uses PDO and databases which support it.\
 Tested with PostgreSQL, MySQL, MariaDB, SqlServer and Sqlite.
+
+<a name="tests"></a>
 ## Tests 
 
 To run tests use `docker composer up` and run one of `run.*.cmd`
 
+<a name="examples"></a>
 ## Examples 
 
 If you are looking for more use cases take a look at tests in `test` directory of project.
 
+<a name="author"></a>
 ## Author 
 
 Michał Czerski
 
 If you have any question or ideas you want share with me contact me on GitHub.
 
+<a name="license"></a>
 ## License 
 
 StormQueries is licensed under MIT licence.

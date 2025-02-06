@@ -1,11 +1,10 @@
 # Storm PHP Queries
 
-It's mix of query builder and ORM made to fetch data in most effective way.\
-Intuitive, easy to learn light yet powerful tool.
+It's combination of query builder and ORM made to fetch data in most effective way.\
+Intuitive, easy to learn, light yet powerful.
 If you work with ORMs you will notice that you don't have to configure nothing but still you 
-have possilbity to build easilly queries and retrieve in hierarchical way. 
+have possibility to build queries easily and retrieve in hierarchical way. 
 
-Most interesting features
 - hierarchical models (biggest advantage of ORM without disadvantages of over-configuration etc.)
 - query builder supporting assembling queries (support criteria-finder pattern for modern architectures)
 - subqueries
@@ -53,7 +52,8 @@ composer require stormmore/queries
 ```
 
 ### Establishing connection
-Storm Queries use from PDO object
+StormQueries uses PDO.
+
 ```php
 use Storm\Query\ConnectionFactory;
 use Storm\Query\StormQueries;
@@ -151,7 +151,7 @@ $stormQueries->from('customers')->where('id', 14)->find();
 ```
 
 ### Aggregation functions 
-They immediately return data (scalar value) from db so don't use them in subqueries. Use select instead. 
+
  ```php
 $stormQueries->from('products', 'category_id = ?', 7)->count();
 $stormQueries->from('products', 'category_id = ?', 7)->min('price');
@@ -287,7 +287,7 @@ $queries
 
 ### Joins
 
-#### OneToOne
+#### One-to-one relationship
 ```php
 $orders = $queries
   ->from('orders o', Map::from("orders", [
@@ -307,7 +307,7 @@ foreach($orders as $order) {
 ```
 
 
-#### OneToMany
+#### One-to-many relationship
 ```php
 $queries
   ->from('customers c',  Map::from([
@@ -318,7 +318,7 @@ $queries
           'order_id' => 'id'
   ]))
 ```
-#### ManyToMany
+#### Many-to-many relationship
 ```php
 $queries
   ->from('products p', Map::from([
@@ -335,6 +335,41 @@ $queries
 ```
 
 ### SubQueries
+
+#### from
+```php
+$stormQueries
+->from(
+    SubQuery::create($this->queries->from('products'), 'p')
+)
+->where('p.product_id', 7)
+->find();
+```
+#### left join
+```php
+$stormQueries
+->from(
+    SubQuery::create($this->queries->from('products'), 'p')
+)
+->leftJoin(
+    SubQuery::create($this->queries->from('suppliers'), 's'), 's.supplier_id', 'p.supplier_id')
+)
+->findAll();
+```
+
+#### where 
+```php
+$stormQueries
+->from("products")
+->where("category_id", 1)
+->where('price', '<=',
+    $this->queries
+        ->select("avg(price)")
+        ->from("products")
+        ->where("category_id", 1)
+)
+->findAll();
+```
 
 ### Restrictions
 Using joins requires using aliases in `from` and `join` clause.
@@ -380,6 +415,15 @@ $stormQueries->insert('person', ['name' => 'Micheal'])->execute(false);
 ```
 
 ## Insert many
+```php
+$stormQueries
+->insertMany('person', [
+    ['name' => 'Michael'],
+    ['name' => 'Kevin'],
+    ['name' => 'LeBron']
+])
+->execute();
+```
 
 ## Update 
 ```php

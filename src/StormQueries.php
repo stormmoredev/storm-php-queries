@@ -1,13 +1,13 @@
 <?php
 
-namespace Storm\Query;
+namespace Stormmore\Queries;
 
-use Storm\Query\Mapper\Map;
-use Storm\Query\Queries\DeleteQuery;
-use Storm\Query\Queries\InsertQuery;
-use Storm\Query\Queries\SelectQuery;
-use Storm\Query\Queries\SubQuery;
-use Storm\Query\Queries\UpdateQuery;
+use Stormmore\Queries\Mapper\Map;
+use Stormmore\Queries\Queries\DeleteQuery;
+use Stormmore\Queries\Queries\InsertQuery;
+use Stormmore\Queries\Queries\SelectQuery;
+use Stormmore\Queries\Queries\SubQuery;
+use Stormmore\Queries\Queries\UpdateQuery;
 
 readonly class StormQueries
 {

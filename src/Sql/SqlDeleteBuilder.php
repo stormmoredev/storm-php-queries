@@ -1,8 +1,8 @@
 <?php
 
-namespace Storm\Query\Sql;
+namespace Stormmore\Queries\Sql;
 
-use Storm\Query\Sql\Clauses\ConditionalClause;
+use Stormmore\Queries\Sql\Clauses\ConditionalClause;
 
 class SqlDeleteBuilder
 {

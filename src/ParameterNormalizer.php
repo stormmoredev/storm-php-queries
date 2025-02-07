@@ -1,6 +1,6 @@
 <?php
 
-namespace Storm\Query;
+namespace Stormmore\Queries;
 
 use DateTime;
 use DateTimeZone;

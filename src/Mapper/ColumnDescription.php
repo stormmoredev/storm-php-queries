@@ -1,6 +1,6 @@
 <?php
 
-namespace Storm\Query\Mapper;
+namespace Stormmore\Queries\Mapper;
 
 class ColumnDescription
 {

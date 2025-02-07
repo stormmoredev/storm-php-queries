@@ -2,6 +2,7 @@
 
 namespace integration\mapper;
 
+use data\ConnectionProvider;
 use data\models\Customer;
 use data\models\Details;
 use data\models\Order;
@@ -9,10 +10,9 @@ use data\models\Product;
 use data\models\Shipper;
 use data\models\Tag;
 use InvalidArgumentException;
-use data\ConnectionProvider;
 use PHPUnit\Framework\TestCase;
-use Storm\Query\Mapper\Map;
-use Storm\Query\StormQueries;
+use Stormmore\Queries\Mapper\Map;
+use Stormmore\Queries\StormQueries;
 
 
 class JoinTest extends TestCase

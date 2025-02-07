@@ -3,8 +3,8 @@
 namespace unit\queries\select;
 
 use PHPUnit\Framework\TestCase;
-use Storm\Query\IConnection;
-use Storm\Query\StormQueries;
+use Stormmore\Queries\IConnection;
+use Stormmore\Queries\StormQueries;
 
 final class LeftJoinTest extends TestCase
 {

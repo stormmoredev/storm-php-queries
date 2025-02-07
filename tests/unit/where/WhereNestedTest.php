@@ -4,8 +4,8 @@ declare(strict_types=1);
 namespace unit\where;
 
 use PHPUnit\Framework\TestCase;
-use Storm\Query\IConnection;
-use Storm\Query\Queries\SelectQuery;
+use Stormmore\Queries\IConnection;
+use Stormmore\Queries\Queries\SelectQuery;
 
 final class WhereNestedTest extends TestCase
 {

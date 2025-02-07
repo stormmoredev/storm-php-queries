@@ -1,11 +1,11 @@
 <?php
 
-namespace Storm\Query;
+namespace Stormmore\Queries;
 
 use DateTime;
+use Exception;
 use PDO;
 use PDOStatement;
-use Exception;
 
 class Connection implements IConnection
 {

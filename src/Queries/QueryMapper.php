@@ -1,11 +1,11 @@
 <?php
 
-namespace Storm\Query\Queries;
+namespace Stormmore\Queries\Queries;
 
 use Exception;
 use InvalidArgumentException;
-use Storm\Query\Mapper\Map;
-use Storm\Query\Mapper\Mapper;
+use Stormmore\Queries\Mapper\Map;
+use Stormmore\Queries\Mapper\Mapper;
 
 class QueryMapper
 {

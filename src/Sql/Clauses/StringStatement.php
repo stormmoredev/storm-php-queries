@@ -1,6 +1,6 @@
 <?php
 
-namespace Storm\Query\Sql\Clauses;
+namespace Stormmore\Queries\Sql\Clauses;
 
 readonly class StringStatement
 {

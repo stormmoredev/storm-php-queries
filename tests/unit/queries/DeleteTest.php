@@ -3,8 +3,8 @@
 namespace unit\queries;
 
 use PHPUnit\Framework\TestCase;
-use Storm\Query\IConnection;
-use Storm\Query\Queries\DeleteQuery;
+use Stormmore\Queries\IConnection;
+use Stormmore\Queries\Queries\DeleteQuery;
 
 final class DeleteTest extends TestCase
 {

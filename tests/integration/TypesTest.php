@@ -2,12 +2,11 @@
 
 namespace integration;
 
-use Cassandra\Date;
 use data\ConnectionProvider;
-use PHPUnit\Framework\TestCase;
-use Storm\Query\StormQueries;
 use DateTime;
 use DateTimeZone;
+use PHPUnit\Framework\TestCase;
+use Stormmore\Queries\StormQueries;
 
 final class TypesTest extends TestCase
 {

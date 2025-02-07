@@ -4,9 +4,7 @@ namespace integration\queries;
 
 use data\ConnectionProvider;
 use PHPUnit\Framework\TestCase;
-use Storm\Query\StormQueries;
-
-use DateTime;
+use Stormmore\Queries\StormQueries;
 
 final class UpdateTest extends TestCase
 {

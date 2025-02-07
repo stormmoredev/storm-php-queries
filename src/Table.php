@@ -1,9 +1,9 @@
 <?php
 
-namespace Storm\Query;
+namespace Stormmore\Queries;
 
 use InvalidArgumentException;
-use Storm\Query\Queries\SubQuery;
+use Stormmore\Queries\Queries\SubQuery;
 
 class Table
 {

@@ -1,8 +1,8 @@
 <?php
 
-namespace Storm\Query\Sql\Clauses;
+namespace Stormmore\Queries\Sql\Clauses;
 
-use Storm\Query\Queries\SubQuery;
+use Stormmore\Queries\Queries\SubQuery;
 
 class JoinClause
 {

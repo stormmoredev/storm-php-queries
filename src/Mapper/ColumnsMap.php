@@ -1,9 +1,8 @@
 <?php
 
-namespace Storm\Query\Mapper;
+namespace Stormmore\Queries\Mapper;
 
-use InvalidArgumentException;
-use Storm\Query\Table;
+use Stormmore\Queries\Table;
 
 class ColumnsMap
 {

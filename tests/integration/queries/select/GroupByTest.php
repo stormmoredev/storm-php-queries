@@ -4,7 +4,7 @@ namespace integration\queries\select;
 
 use data\ConnectionProvider;
 use PHPUnit\Framework\TestCase;
-use Storm\Query\StormQueries;
+use Stormmore\Queries\StormQueries;
 
 final class GroupByTest extends TestCase
 {

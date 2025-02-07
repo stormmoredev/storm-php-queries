@@ -4,8 +4,8 @@ namespace unit\queries;
 
 use DateTime;
 use PHPUnit\Framework\TestCase;
-use Storm\Query\IConnection;
-use Storm\Query\Queries\InsertQuery;
+use Stormmore\Queries\IConnection;
+use Stormmore\Queries\Queries\InsertQuery;
 
 final class InsertTest extends TestCase
 {

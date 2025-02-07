@@ -1,6 +1,6 @@
 <?php
 
-namespace Storm\Query\Sql;
+namespace Stormmore\Queries\Sql;
 
 class SqlInsertBuilder
 {

@@ -6,9 +6,9 @@ use data\ConnectionProvider;
 use data\models\Customer;
 use data\models\CustomerSimple;
 use PHPUnit\Framework\TestCase;
-use Storm\Query\Mapper\Map;
-use Storm\Query\StormQueries;
 use stdClass;
+use Stormmore\Queries\Mapper\Map;
+use Stormmore\Queries\StormQueries;
 
 class FromMapTest extends TestCase
  {

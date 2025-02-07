@@ -1,8 +1,6 @@
 <?php
 
-namespace Storm\Query;
-
-use PDO;
+namespace Stormmore\Queries;
 
 class ConnectionFactory
 {

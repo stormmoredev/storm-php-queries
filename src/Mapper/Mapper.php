@@ -1,10 +1,10 @@
 <?php
 
-namespace Storm\Query\Mapper;
+namespace Stormmore\Queries\Mapper;
 
+use Exception;
 use ReflectionClass;
 use ReflectionException;
-use Exception;
 
 class Mapper
 {

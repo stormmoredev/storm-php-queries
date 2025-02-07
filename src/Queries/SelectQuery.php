@@ -1,13 +1,13 @@
 <?php
 
-namespace Storm\Query\Queries;
+namespace Stormmore\Queries\Queries;
 
-use Storm\Query\IConnection;
-use Storm\Query\Mapper\Map;
-use Storm\Query\ParameterNormalizer;
-use Storm\Query\Sql\SqlSelectBuilder;
-use Storm\Query\Table;
 use InvalidArgumentException;
+use Stormmore\Queries\IConnection;
+use Stormmore\Queries\Mapper\Map;
+use Stormmore\Queries\ParameterNormalizer;
+use Stormmore\Queries\Sql\SqlSelectBuilder;
+use Stormmore\Queries\Table;
 
 class SelectQuery
 {

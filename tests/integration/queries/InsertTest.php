@@ -3,9 +3,8 @@
 namespace integration\queries;
 
 use data\ConnectionProvider;
-use DateTime;
 use PHPUnit\Framework\TestCase;
-use Storm\Query\StormQueries;
+use Stormmore\Queries\StormQueries;
 
 final class InsertTest extends TestCase
 {

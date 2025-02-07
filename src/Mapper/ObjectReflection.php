@@ -1,10 +1,10 @@
 <?php
 
-namespace Storm\Query\Mapper;
+namespace Stormmore\Queries\Mapper;
 
-use ReflectionClass;
 use AllowDynamicProperties;
 use DateTime;
+use ReflectionClass;
 
 class ObjectReflection
 {

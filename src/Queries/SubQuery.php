@@ -1,6 +1,6 @@
 <?php
 
-namespace Storm\Query\Queries;
+namespace Stormmore\Queries\Queries;
 
 class SubQuery
 {

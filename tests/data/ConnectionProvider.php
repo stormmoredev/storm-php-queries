@@ -2,10 +2,10 @@
 
 namespace data;
 
-use Storm\Query\Connection;
-use Storm\Query\ConnectionFactory;
-use Storm\Query\IConnection;
-use Storm\Query\StormQueries;
+use Stormmore\Queries\Connection;
+use Stormmore\Queries\ConnectionFactory;
+use Stormmore\Queries\IConnection;
+use Stormmore\Queries\StormQueries;
 
 class ConnectionProvider
 {

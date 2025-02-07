@@ -22,8 +22,8 @@ use data\models\mapperTypeTest\ShipperWithTypedProps;
 use DateTime;
 use PHPUnit\Framework\TestCase;
 use stdClass;
-use Storm\Query\Mapper\Map;
-use Storm\Query\StormQueries;
+use Stormmore\Queries\Mapper\Map;
+use Stormmore\Queries\StormQueries;
 
 final class TypeTest extends TestCase
 {

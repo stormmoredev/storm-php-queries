@@ -5,7 +5,7 @@ namespace integration;
 use data\ConnectionProvider;
 use Exception;
 use PHPUnit\Framework\TestCase;
-use Storm\Query\StormQueries;
+use Stormmore\Queries\StormQueries;
 
 interface Notifier
 {

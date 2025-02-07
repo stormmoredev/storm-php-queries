@@ -1,10 +1,10 @@
 <?php
 
-namespace Storm\Query\Queries;
+namespace Stormmore\Queries\Queries;
 
-use Storm\Query\IConnection;
-use Storm\Query\ParameterNormalizer;
-use Storm\Query\Sql\SqlInsertBuilder;
+use Stormmore\Queries\IConnection;
+use Stormmore\Queries\ParameterNormalizer;
+use Stormmore\Queries\Sql\SqlInsertBuilder;
 
 class InsertQuery
 {

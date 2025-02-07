@@ -4,9 +4,9 @@ namespace integration;
 
 use data\ConnectionProvider;
 use PHPUnit\Framework\TestCase;
-use Storm\Query\Mapper\Map;
-use Storm\Query\Queries\SubQuery;
-use Storm\Query\StormQueries;
+use Stormmore\Queries\Mapper\Map;
+use Stormmore\Queries\Queries\SubQuery;
+use Stormmore\Queries\StormQueries;
 
 class SubqueryTest extends TestCase
 {

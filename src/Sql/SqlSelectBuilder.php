@@ -1,14 +1,13 @@
 <?php
 
-namespace Storm\Query\Sql;
+namespace Stormmore\Queries\Sql;
 
-use Storm\Query\Mapper\Map;
-use Storm\Query\Queries\SubQuery;
-use Storm\Query\Sql\Clauses\ConditionalClause;
 use InvalidArgumentException;
-use Storm\Query\Sql\Clauses\JoinClause;
-use Storm\Query\Sql\Clauses\OrderByClause;
-use Storm\Query\Sql\Clauses\SelectClause;
+use Stormmore\Queries\Queries\SubQuery;
+use Stormmore\Queries\Sql\Clauses\ConditionalClause;
+use Stormmore\Queries\Sql\Clauses\JoinClause;
+use Stormmore\Queries\Sql\Clauses\OrderByClause;
+use Stormmore\Queries\Sql\Clauses\SelectClause;
 
 class SqlSelectBuilder
 {

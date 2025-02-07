@@ -4,7 +4,7 @@ namespace unit;
 
 use data\ConnectionProvider;
 use PHPUnit\Framework\TestCase;
-use Storm\Query\StormQueries;
+use Stormmore\Queries\StormQueries;
 
 final class SubqueryQueryTest extends TestCase
 {

@@ -3,9 +3,9 @@
 namespace unit;
 
 use data\models\Customer;
-use PHPUnit\Framework\TestCase;
-use Storm\Query\Mapper\Map;
 use InvalidArgumentException;
+use PHPUnit\Framework\TestCase;
+use Stormmore\Queries\Mapper\Map;
 
 class MapTest extends  TestCase
 {

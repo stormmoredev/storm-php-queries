@@ -54,8 +54,8 @@ composer require stormmore/queries
 StormQueries uses PDO.
 
 ```php
-use Storm\Query\ConnectionFactory;
-use Storm\Query\StormQueries;
+use Storm\Queries\ConnectionFactory;
+use Storm\Queries\StormQueries;
 
 $connection = ConnectionFactory::createFromstring("dsn", "user", "password");
 $queries = new StormQueries($connection);
@@ -64,9 +64,9 @@ $queries = new StormQueries($connection);
 ### Full working example
 
 ```php
-use Storm\Query\StormQueries;
-use Storm\Query\Mapper\Map;
-use Storm\Query\ConnectionFactory;
+use Storm\Queries\StormQueries;
+use Storm\Queries\Mapper\Map;
+use Storm\Queries\ConnectionFactory;
 
 $connection = ConnectionFactory::createFromString(
     "mysql:host=localhost;port=7801;dbname=storm_test", "mysql", "mysql")

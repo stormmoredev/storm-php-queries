@@ -4,8 +4,8 @@ namespace unit\where;
 
 use InvalidArgumentException;
 use PHPUnit\Framework\TestCase;
-use Storm\Query\IConnection;
-use Storm\Query\Queries\SelectQuery;
+use Stormmore\Queries\IConnection;
+use Stormmore\Queries\Queries\SelectQuery;
 
 final class WhereTest extends TestCase
 {

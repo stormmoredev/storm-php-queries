@@ -2,7 +2,7 @@
     "name": "stormmore/queries",
     "autoload": {
         "psr-4": {
-            "Storm\\Query\\": "src"
+            "Stormmore\\Queries\\": "src"
         }
     },
     "require-dev": {

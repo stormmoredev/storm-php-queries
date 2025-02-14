@@ -288,7 +288,7 @@ foreach($orders as $order) {
 }
 ```
 
-### One-to-one non-hierarchical relationship
+#### One-to-one non-hierarchical relationship
 ```php
 $products = $this->queries
   ->from('products p', Map::from([

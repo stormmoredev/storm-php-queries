@@ -288,6 +288,24 @@ foreach($orders as $order) {
 }
 ```
 
+### One-to-one non-hierarchical relationship
+```php
+$products = $this->queries
+  ->from('products p', Map::from([
+      'p.product_id' => 'id',
+      'p.product_name' => 'name',
+      's.supplier_name' => 'supplierName',
+      'c.category_name' => 'categoryName',
+  ]))
+  ->leftJoin('categories c', 'c.category_id', 'p.category_id')
+  ->leftJoin('suppliers s', 's.supplier_id', 'p.supplier_id')
+  ->findAll();
+
+foreach($products as $product) {
+    echo "$product->name $product->supplierName $product->categoryName";
+}
+```
+
 #### One-to-many relationship
 ```php
 $queries

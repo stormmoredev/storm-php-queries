@@ -59,7 +59,6 @@ class SelectQuery
     private function addRelationshipMap(string|SubQuery $set, ?Map $map, string $l, string $r): void
     {
         $rootMap = $this->queryMapper->getFromMap();
-        !($map == null and $rootMap != null) or throw new InvalidArgumentException("Map for join is required");
         !($map != null and $rootMap == null) or throw new InvalidArgumentException("Map for root table (from) is required");
 
         if ($map !== null) {
@@ -134,17 +133,6 @@ class SelectQuery
         return $this;
     }
 
-    public function getSql(): string
-    {
-        if ($this->queryMapper->hasMaps()) {
-            $this->selectQuery->clearSelect();
-            foreach ($this->queryMapper->getSelect() as $select) {
-                $this->selectQuery->select($select);
-            }
-        }
-        return $this->selectQuery->toSql();
-    }
-
     public function getParameters(): array
     {
         return $this->selectQuery->getParameters();
@@ -167,6 +155,17 @@ class SelectQuery
         }
 
         return $results;
+    }
+
+    public function getSql(): string
+    {
+        if ($this->queryMapper->hasMaps()) {
+            $this->selectQuery->clearSelect();
+            foreach ($this->queryMapper->getSelect() as $select) {
+                $this->selectQuery->select($select);
+            }
+        }
+        return $this->selectQuery->toSql();
     }
 
     public function min(string $column): float

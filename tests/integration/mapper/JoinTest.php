@@ -58,18 +58,6 @@ class JoinTest extends TestCase
             ]));
     }
 
-    public function testThrowExceptionWhenJoinHasNoMap(): void
-    {
-        $this->expectException(InvalidArgumentException::class);
-
-        $this->queries
-            ->from('customers c',  Map::from([
-                'customer_id' => 'id',
-                'customer_name' => 'name'
-            ]))
-            ->leftJoin('orders', 'orders.customer_id', 'c.customer_id');
-    }
-
     public function testManyToManyJoin(): void
     {
         $products = $this->queries
@@ -90,6 +78,28 @@ class JoinTest extends TestCase
         $this->assertCount(3, $products[1]->tags);
         $this->assertCount(1, $products[2]->tags);
         $this->assertEquals("premium", $products[2]->tags[0]->name);
+    }
+
+    public function testOneToOneWithoutHierarchicalRelationJoin(): void
+    {
+        $products = $this->queries
+            ->from('products p', Map::from([
+                'p.product_id' => 'id',
+                'p.product_name' => 'name',
+                's.supplier_name' => 'supplierName',
+                'c.category_name' => 'categoryName',
+            ]))
+            ->leftJoin('categories c', 'c.category_id', 'p.category_id')
+            ->leftJoin('suppliers s', 's.supplier_id', 'p.supplier_id')
+            ->findAll();
+
+        $this->assertCount(77, $products);
+        $product = array_find($products, function($product) {
+            return $product->id == 7;
+        });
+        $this->assertEquals("Uncle Bob's Organic Dried Pears", $product->name);
+        $this->assertEquals("Produce", $product->categoryName);
+        $this->assertEquals("Grandma Kelly's Homestead", $product->supplierName);
     }
 
     public function testAllJoinTypesInOneQuery(): void

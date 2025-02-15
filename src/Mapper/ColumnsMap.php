@@ -17,6 +17,9 @@ class ColumnsMap
         $this->table = $table;
 
         foreach($columns as $columnName => $fieldName) {
+            if (is_int($columnName)) {
+                $columnName = $fieldName;
+            }
             $this->columns[] = new ColumnDescription($columnName, $fieldName, $this->table->getPrefix());
         }
     }

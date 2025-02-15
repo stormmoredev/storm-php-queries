@@ -37,6 +37,21 @@ class FromMapTest extends TestCase
         $this->assertEquals([7, "Blondel père et fils"], [$customer->id, $customer->name]);
     }
 
+    public function testIndexedArrayMixedWithAssociativeArrayAsMap(): void
+    {
+        $customer = $this->queries->from('customers', 'customer_id = ?', 7, Map::from([
+            'customer_id' => 'id',
+            'customer_name' => 'name',
+            'city',
+            'country'
+        ]))
+        ->find();
+
+        $this->assertEquals(
+            [7, "Blondel père et fils", "Strasbourg", "France"],
+            [$customer->id, $customer->name, $customer->city, $customer->country]);
+    }
+
     public function testMapSingleRecordToUserClass(): void
     {
         $customer = $this->queries->from('customers', 'customer_id = ?', 7, Map::from(class: CustomerSimple::class))->find();

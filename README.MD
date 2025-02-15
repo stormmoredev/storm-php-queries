@@ -257,12 +257,24 @@ $queries
   ]))
   ->find()
 ```
-Query with user class
+#### Map to user class
 ```php
 $queries
   ->from('customers',  Map::from([
       'customer_id' => 'id',
       'customer_name' => 'name'
+  ], Customer::class))
+  ->find()
+```
+
+#### Map as combination of index and associative array 
+```php
+$queries
+  ->from('customers',  Map::from([
+      'customer_id' => 'id',
+      'customer_name' => 'name',
+      'city', 
+      'country'
   ], Customer::class))
   ->find()
 ```

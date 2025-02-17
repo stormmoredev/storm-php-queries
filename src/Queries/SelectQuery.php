@@ -45,14 +45,14 @@ class SelectQuery
     public function leftJoin(string|SubQuery $set, string|array $on, Map $map = null): SelectQuery
     {
         $this->addJoinMap($set, $map, $on);
-        $this->selectQuery->leftJoin('INNER', $set, $on);
+        $this->selectQuery->join('LEFT', $set, $on);
         return $this;
     }
 
-    public function leftOuterJoin(string|SubQuery  $set, string|array $on, Map $map = null): SelectQuery
+    public function join(string|SubQuery $set, string|array $on, Map $map = null): SelectQuery
     {
         $this->addJoinMap($set, $map, $on);
-        $this->selectQuery->leftJoin('OUTER', $set, $on);
+        $this->selectQuery->join('', $set, $on);
         return $this;
     }
 

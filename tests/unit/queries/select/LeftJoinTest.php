@@ -27,24 +27,24 @@ final class LeftJoinTest extends TestCase
         $query = $this->queries
             ->select('*')
             ->from('categories')
-            ->leftOuterJoin('products', ['category_id' => 'category_id']);
+            ->join('products', ['category_id' => 'category_id']);
 
         $sql = remove_new_lines($query->getSql());
 
-        $this->assertEquals("SELECT * FROM categories LEFT OUTER JOIN products ON category_id = category_id", $sql);
+        $this->assertEquals("SELECT * FROM categories JOIN products ON category_id = category_id", $sql);
     }
 
-    public function test2LeftJoin(): void
+    public function testTwoLeftJoin(): void
     {
         $query = $this->queries
             ->select('*')
             ->from('categories')
             ->leftJoin('tab1', 'a = aa')
-            ->leftOuterJoin('tab2', 'b = bb');
+            ->join('tab2', 'b = bb');
 
         $sql = remove_new_lines($query->getSql());
 
-        $this->assertEquals("SELECT * FROM categories LEFT JOIN tab1 ON a = aa LEFT OUTER JOIN tab2 ON b = bb", $sql);
+        $this->assertEquals("SELECT * FROM categories LEFT JOIN tab1 ON a = aa JOIN tab2 ON b = bb", $sql);
     }
 
     protected function setUp(): void

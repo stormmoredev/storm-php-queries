@@ -8,7 +8,7 @@ class JoinClause
 {
     private array $joins = [];
 
-    public function addLeftJoin(string $type, string|SubQuery $set, string|array $columns): void
+    public function addJoin(string $type, string|SubQuery $set, string|array $columns): void
     {
         $this->joins[] = [$type, $set, $columns];
     }
@@ -27,11 +27,10 @@ class JoinClause
         $joins = [];
         foreach($this->joins as $join) {
             $type = strtoupper($join[0]);
-            $joinString = "LEFT ";
-            if ($type == "OUTER") {
-                $joinString .= "OUTER ";
+            $joinString = "JOIN ";
+            if ($type == "LEFT") {
+                $joinString = "LEFT JOIN ";
             }
-            $joinString .= "JOIN ";
             if ($join[1] instanceof SubQuery) {
                 $joinString .= "(" . $join[1]->query->getSql() . ") " . $join[1]->alias . " ON " . $this->toOnClause($join[2]);
             }

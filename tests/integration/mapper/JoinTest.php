@@ -104,6 +104,21 @@ class JoinTest extends TestCase
         $this->assertEquals("Grandma Kelly's Homestead", $product->supplierName);
     }
 
+    public function testOneToOneWithMultipleJoinClause(): void
+    {
+        $products = $this->queries
+            ->from('products p', Map::select([
+                'p.product_id' => 'id',
+                'p.product_name' => 'name',
+                'pt.tag_id' => 'tag_id'
+            ]))
+            ->leftJoin('products_tags pt', 'pt.tag_id = 1 and pt.product_id = p.product_id')
+            ->where('pt.tag_id', 'IS NOT NULL')
+            ->findAll();
+
+        $this->assertCount(2, $products);
+    }
+
     public function testAllJoinTypesInOneQuery(): void
     {
         $customer = $this->queries

@@ -8,9 +8,9 @@ class JoinClause
 {
     private array $joins = [];
 
-    public function addLeftJoin(string $type, string|SubQuery $set, string $columnA, string $columnB): void
+    public function addLeftJoin(string $type, string|SubQuery $set, array $columns): void
     {
-        $this->joins[] = [$type, $set, $columnA, $columnB];
+        $this->joins[] = [$type, $set, $columns];
     }
 
     public function hasJoines(): bool
@@ -33,13 +33,22 @@ class JoinClause
             }
             $joinString .= "JOIN ";
             if ($join[1] instanceof SubQuery) {
-                $joinString .= "(" . $join[1]->query->getSql() . ") " . $join[1]->alias . " ON $join[2] = $join[3]";
+                $joinString .= "(" . $join[1]->query->getSql() . ") " . $join[1]->alias . " ON " . $this->toOnClause($join[2]);
             }
             else {
-                $joinString .= "$join[1] ON $join[2] = $join[3]";
+                $joinString .= "$join[1] ON " . $this->toOnClause($join[2]);
             }
             $joins[] = $joinString;
         }
         return implode("\n", $joins);
+    }
+
+    private function toOnClause(array $columns): string
+    {
+        $onClause = [];
+        foreach($columns as $l => $r) {
+            $onClause[] = "$l = $r";
+        }
+        return implode(" AND ", $onClause);
     }
 }

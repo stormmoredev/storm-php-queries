@@ -11,10 +11,17 @@ class QueryMapper
 {
     private ?Map $from = null;
 
-    public function addJoinMap(Map $map, $l, $r): void
+    public function addJoinMap(Map $map, array $on): void
     {
         $this->from?->getTable()->hasAlias() or throw new InvalidArgumentException("Join table {$map->getTable()->table} doesn't have alias");
         $map->getTable()->hasAlias() or throw new InvalidArgumentException("Join table {$map->getTable()->table} doesn't have alias");
+        if ($map->isSelectMap()) {
+            $this->from->addMapColumns($map);
+            return;
+        }
+
+        $l = array_key_first($on);
+        $r = $on[$l];
         $alias = "";
         list($lAlias,) = explode('.', trim($l));
         list($rAlias,) = explode('.', trim($r));
@@ -24,11 +31,8 @@ class QueryMapper
         if ($rAlias == $map->getTable()->alias) {
             $alias = $lAlias;
         }
-        if ($map->isSelectMap()) {
-            $this->from->addMapColumns($map);
-        } else {
-            $this->addMapToParentMapByAlias($map, $alias);
-        }
+
+        $this->addMapToParentMapByAlias($map, $alias);
     }
 
     private function addMapToParentMapByAlias(Map $map, string $alias): void

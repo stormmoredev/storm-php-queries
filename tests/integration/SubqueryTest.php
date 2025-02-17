@@ -44,7 +44,7 @@ class SubqueryTest extends TestCase
     {
         $items = $this->queries
             ->from(SubQuery::create($this->queries->from('products'), 'p'))
-            ->leftJoin('suppliers s', 's.supplier_id', 'p.supplier_id')
+            ->leftJoin('suppliers s', ['s.supplier_id' => 'p.supplier_id'])
             ->orderByAsc('p.product_id')
             ->findAll();
 
@@ -59,7 +59,7 @@ class SubqueryTest extends TestCase
     {
         $items = $this->queries
             ->from(SubQuery::create($this->queries->from('products'), 'p'))
-            ->leftJoin(SubQuery::create($this->queries->from('suppliers'), 's'), 's.supplier_id', 'p.supplier_id')
+            ->leftJoin(SubQuery::create($this->queries->from('suppliers'), 's'), ['s.supplier_id' => 'p.supplier_id'])
             ->orderByAsc('p.product_id')
             ->findAll();
 
@@ -74,7 +74,7 @@ class SubqueryTest extends TestCase
     {
         $items = $this->queries
             ->from('products p')
-            ->leftJoin(SubQuery::create($this->queries->from('suppliers'), 's'), 's.supplier_id', 'p.supplier_id')
+            ->leftJoin(SubQuery::create($this->queries->from('suppliers'), 's'), ['s.supplier_id' => 'p.supplier_id'])
             ->orderByAsc('p.product_id')
             ->findAll();
 
@@ -105,7 +105,7 @@ class SubqueryTest extends TestCase
                 'order_id' => 'id',
                 'order_date' => 'date'
             ]))
-            ->leftJoin('order_details od', 'od.order_id', 'o.order_id', Map::many('details', [
+            ->leftJoin('order_details od', ['od.order_id' => 'o.order_id'], Map::many('details', [
                 'order_detail_id' => 'id',
                 'quantity' => 'quantity'
             ]))
@@ -129,7 +129,7 @@ class SubqueryTest extends TestCase
                 'order_id' => 'id',
                 'order_date' => 'date'
             ]))
-            ->leftJoin(SubQuery::create($this->queries->from('order_details'), 'od'), 'od.order_id', 'o.order_id', Map::many('details', [
+            ->leftJoin(SubQuery::create($this->queries->from('order_details'), 'od'), ['od.order_id' => 'o.order_id'], Map::many('details', [
                 'order_detail_id' => 'id',
                 'quantity' => 'quantity'
             ]))

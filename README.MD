@@ -73,7 +73,7 @@ $connection = ConnectionFactory::createFromString(
 $queries = new StormQueries($connection);
 
 $queries
-  ->from('customers c',  Map::from([
+  ->from('customers c',  Map::select([
       'customer_id' => 'id',
       'customer_name' => 'name'
   ]))
@@ -251,7 +251,7 @@ Map defines
 ### From
 ```php
 $queries
-  ->from('customers', 'customer_id = ?', 28, Map::from([
+  ->from('customers', 'customer_id = ?', 28, Map::select([
       'customer_id' => 'id',
       'customer_name' => 'name'
   ]))
@@ -260,7 +260,7 @@ $queries
 #### Map to user class
 ```php
 $queries
-  ->from('customers',  Map::from([
+  ->from('customers',  Map::select([
       'customer_id' => 'id',
       'customer_name' => 'name'
   ], Customer::class))
@@ -270,7 +270,7 @@ $queries
 #### Map as combination of index and associative array 
 ```php
 $queries
-  ->from('customers',  Map::from([
+  ->from('customers',  Map::select([
       'customer_id' => 'id',
       'customer_name' => 'name',
       'city', 
@@ -284,7 +284,7 @@ $queries
 #### One-to-one relationship
 ```php
 $orders = $queries
-  ->from('orders o', Map::from("orders", [
+  ->from('orders o', Map::select("orders", [
     'order_id' => 'id',
     'order_date' => 'date'
   ]))
@@ -303,7 +303,7 @@ foreach($orders as $order) {
 #### One-to-one non-hierarchical relationship
 ```php
 $products = $this->queries
-  ->from('products p', Map::from([
+  ->from('products p', Map::select([
       'p.product_id' => 'id',
       'p.product_name' => 'name',
       's.supplier_name' => 'supplierName',
@@ -321,7 +321,7 @@ foreach($products as $product) {
 #### One-to-many relationship
 ```php
 $queries
-  ->from('customers c',  Map::from([
+  ->from('customers c',  Map::select([
       'customer_id' => 'id',
       'customer_name' => 'name'
   ]))
@@ -332,7 +332,7 @@ $queries
 #### Many-to-many relationship
 ```php
 $queries
-  ->from('products p', Map::from([
+  ->from('products p', Map::select([
       'product_id' => 'id',
       'product_name' => 'name'
   ]))

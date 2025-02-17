@@ -11,9 +11,8 @@ class QueryMapper
 {
     private ?Map $from = null;
 
-    public function addRelationshipMap(Map $map, $l, $r): void
+    public function addJoinMap(Map $map, $l, $r): void
     {
-        $map->isRelationship() or throw new Exception("Map doesn't describe relationship. Use Map::many or Map::one");
         $this->from?->getTable()->hasAlias() or throw new InvalidArgumentException("Join table {$map->getTable()->table} doesn't have alias");
         $map->getTable()->hasAlias() or throw new InvalidArgumentException("Join table {$map->getTable()->table} doesn't have alias");
         $alias = "";
@@ -25,7 +24,11 @@ class QueryMapper
         if ($rAlias == $map->getTable()->alias) {
             $alias = $lAlias;
         }
-        $this->addMapToParentMapByAlias($map, $alias);
+        if ($map->isSelectMap()) {
+            $this->from->addMapColumns($map);
+        } else {
+            $this->addMapToParentMapByAlias($map, $alias);
+        }
     }
 
     private function addMapToParentMapByAlias(Map $map, string $alias): void
@@ -37,7 +40,7 @@ class QueryMapper
             $this->addMapToParentMapByAlias($map, $found->getTable()->alias);
         }
         else {
-            $found->addRelationshipMap($map);
+            $found->addJoinMap($map);
         }
     }
 
@@ -67,7 +70,7 @@ class QueryMapper
 
     public function addFromMap(Map $map): void
     {
-        !$map->isRelationship() or throw new Exception("Use Map::create to map root table");
+        !$map->isRelationshipMap() or throw new Exception("Use Map::create to map root table");
         $this->from  = $map;
     }
 

@@ -24,7 +24,7 @@ class JoinTest extends TestCase
         $this->expectException(InvalidArgumentException::class);
 
         $this->queries
-            ->from('customers',  Map::from([
+            ->from('customers',  Map::select([
                 'customer_id' => 'id',
                 'customer_name' => 'name'
             ]))
@@ -38,7 +38,7 @@ class JoinTest extends TestCase
         $this->expectException(InvalidArgumentException::class);
 
         $this->queries
-            ->from('customers c',  Map::from([
+            ->from('customers c',  Map::select([
                 'customer_id' => 'id',
                 'customer_name' => 'name'
             ]))
@@ -61,7 +61,7 @@ class JoinTest extends TestCase
     public function testManyToManyJoin(): void
     {
         $products = $this->queries
-            ->from('products p', Map::from([
+            ->from('products p', Map::select([
                 'product_id' => 'id',
                 'product_name' => 'name'
             ]))
@@ -83,14 +83,16 @@ class JoinTest extends TestCase
     public function testOneToOneWithoutHierarchicalRelationJoin(): void
     {
         $products = $this->queries
-            ->from('products p', Map::from([
+            ->from('products p', Map::select([
                 'p.product_id' => 'id',
                 'p.product_name' => 'name',
-                's.supplier_name' => 'supplierName',
-                'c.category_name' => 'categoryName',
             ]))
-            ->leftJoin('categories c', 'c.category_id', 'p.category_id')
-            ->leftJoin('suppliers s', 's.supplier_id', 'p.supplier_id')
+            ->leftJoin('categories c', 'c.category_id', 'p.category_id', Map::select([
+                'c.category_name' => 'categoryName'
+            ]))
+            ->leftJoin('suppliers s', 's.supplier_id', 'p.supplier_id', Map::select([
+                's.supplier_name' => 'supplierName',
+            ]))
             ->findAll();
 
         $this->assertCount(77, $products);
@@ -105,7 +107,7 @@ class JoinTest extends TestCase
     public function testAllJoinTypesInOneQuery(): void
     {
         $customer = $this->queries
-            ->from('customers c',  Map::from([
+            ->from('customers c',  Map::select([
                 'customer_id' => 'id',
                 'customer_name' => 'name'
             ]))
@@ -154,7 +156,7 @@ class JoinTest extends TestCase
     public function testAllJoinTypesInOneQueryWithTypes(): void
     {
         $customer = $this->queries
-            ->from('customers c',  Map::from([
+            ->from('customers c',  Map::select([
                 'customer_id' => 'id',
                 'customer_name' => 'name'
             ], Customer::class))

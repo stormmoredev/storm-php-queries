@@ -44,26 +44,26 @@ class SelectQuery
 
     public function leftJoin(string|SubQuery $set, string $l, string $r, Map $map = null): SelectQuery
     {
-        $this->addRelationshipMap($set, $map, $l, $r);
+        $this->addJoinMap($set, $map, $l, $r);
         $this->selectQuery->leftJoin('INNER', $set, $l, $r);
         return $this;
     }
 
     public function leftOuterJoin(string|SubQuery  $set, string $l, string $r, Map $map = null): SelectQuery
     {
-        $this->addRelationshipMap($set, $map, $l, $r);
+        $this->addJoinMap($set, $map, $l, $r);
         $this->selectQuery->leftJoin('OUTER', $set, $l, $r);
         return $this;
     }
 
-    private function addRelationshipMap(string|SubQuery $set, ?Map $map, string $l, string $r): void
+    private function addJoinMap(string|SubQuery $set, ?Map $map, string $l, string $r): void
     {
         $rootMap = $this->queryMapper->getFromMap();
         !($map != null and $rootMap == null) or throw new InvalidArgumentException("Map for root table (from) is required");
 
         if ($map !== null) {
             $map->setTable(new Table($set));
-            $this->queryMapper->addRelationshipMap($map, $l, $r);
+            $this->queryMapper->addJoinMap($map, $l, $r);
         }
     }
 

@@ -16,7 +16,7 @@ class FromMapTest extends TestCase
 
     public function testMapSingleRecordWithPropertiesWithWhereOutsideFromClause(): void
     {
-        $customer = $this->queries->from('customers', Map::from([
+        $customer = $this->queries->from('customers', Map::select([
             'customer_id' => 'id',
             'customer_name' => 'name'
         ]))
@@ -28,7 +28,7 @@ class FromMapTest extends TestCase
 
     public function testMapSingleRecordWithProperties(): void
     {
-        $customer = $this->queries->from('customers', 'customer_id = ?', 7, Map::from([
+        $customer = $this->queries->from('customers', 'customer_id = ?', 7, Map::select([
             'customer_id' => 'id',
             'customer_name' => 'name'
         ]))
@@ -39,7 +39,7 @@ class FromMapTest extends TestCase
 
     public function testIndexedArrayMixedWithAssociativeArrayAsMap(): void
     {
-        $customer = $this->queries->from('customers', 'customer_id = ?', 7, Map::from([
+        $customer = $this->queries->from('customers', 'customer_id = ?', 7, Map::select([
             'customer_id' => 'id',
             'customer_name' => 'name',
             'city',
@@ -54,7 +54,7 @@ class FromMapTest extends TestCase
 
     public function testMapSingleRecordToUserClass(): void
     {
-        $customer = $this->queries->from('customers', 'customer_id = ?', 7, Map::from(class: CustomerSimple::class))->find();
+        $customer = $this->queries->from('customers', 'customer_id = ?', 7, Map::select(class: CustomerSimple::class))->find();
 
         $this->assertInstanceOf(CustomerSimple::class, $customer);
         $this->assertEquals([7, "Blondel père et fils"], [$customer->customer_id, $customer->customer_name]);
@@ -62,7 +62,7 @@ class FromMapTest extends TestCase
 
     public function testMapSingleRecordToStdClass(): void
     {
-        $customer = $this->queries->from('customers', 'customer_id = ?', 7, Map::from())->find();
+        $customer = $this->queries->from('customers', 'customer_id = ?', 7, Map::select())->find();
 
         $this->assertInstanceOf(stdClass::class, $customer);
         $this->assertEquals([7, "Blondel père et fils", '67000'], [$customer->customer_id, $customer->customer_name, $customer->postal_code]);
@@ -70,7 +70,7 @@ class FromMapTest extends TestCase
 
     public function testMapSingleRecordToUserClassWithProperties(): void
     {
-        $customer = $this->queries->from('customers', 'customer_id = ?', 7, Map::from([
+        $customer = $this->queries->from('customers', 'customer_id = ?', 7, Map::select([
             'customer_id' => 'id',
             'customer_name' => 'name'
         ], Customer::class))
@@ -81,7 +81,7 @@ class FromMapTest extends TestCase
 
     public function testMapSingleRecordToUserClassWithKeyAndProperties(): void
     {
-        $customer = $this->queries->from('customers', 'customer_id = ?', 7, Map::from([
+        $customer = $this->queries->from('customers', 'customer_id = ?', 7, Map::select([
             'customer_id' => 'id',
             'customer_name' => 'name'
         ], Customer::class, 'customer_id'))
@@ -93,7 +93,7 @@ class FromMapTest extends TestCase
 
     public function testMapRecordsSetWithPropertiesWithWhereOutsideFromClause(): void
     {
-        $customers = $this->queries->from('customers', Map::from([
+        $customers = $this->queries->from('customers', Map::select([
             'customer_id' => 'id',
             'customer_name' => 'name'
         ]))
@@ -106,7 +106,7 @@ class FromMapTest extends TestCase
 
     public function testMapRecordsSetWithProperties(): void
     {
-        $customers = $this->queries->from('customers', 'customer_id < ?', 8, Map::from([
+        $customers = $this->queries->from('customers', 'customer_id < ?', 8, Map::select([
             'customer_id' => 'id',
             'customer_name' => 'name'
         ]))
@@ -118,7 +118,7 @@ class FromMapTest extends TestCase
 
     public function testRecordsSetToUserClass(): void
     {
-        $customers = $this->queries->from('customers', 'customer_id < ?', 8, Map::from(class: CustomerSimple::class))->findAll();
+        $customers = $this->queries->from('customers', 'customer_id < ?', 8, Map::select(class: CustomerSimple::class))->findAll();
 
         $this->assertCount(7, $customers);
         $this->assertInstanceOf(CustomerSimple::class, $customers[0]);
@@ -127,7 +127,7 @@ class FromMapTest extends TestCase
 
     public function testMapRecordsSetToUserClassWithProperties(): void
     {
-        $customers = $this->queries->from('customers', 'customer_id < ?', 8, Map::from([
+        $customers = $this->queries->from('customers', 'customer_id < ?', 8, Map::select([
             'customer_id' => 'id',
             'customer_name' => 'name'
         ], Customer::class))
@@ -140,7 +140,7 @@ class FromMapTest extends TestCase
 
     public function testRecordsSetToUserClassWithKeyAndProperties(): void
     {
-        $customers = $this->queries->from('customers', 'customer_id < ?', 8, Map::from([
+        $customers = $this->queries->from('customers', 'customer_id < ?', 8, Map::select([
             'customer_id' => 'id',
             'customer_name' => 'name'
         ], Customer::class, 'customer_id'))

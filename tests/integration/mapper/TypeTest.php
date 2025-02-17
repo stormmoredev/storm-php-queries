@@ -123,7 +123,7 @@ final class TypeTest extends TestCase
     private function getOrder(string $orderClassName, string $detailsClassName, string $productClassName, string $shipperClassName): mixed
     {
         return ConnectionProvider::getStormQueries()
-            ->from('orders o', Map::from([
+            ->from('orders o', Map::select([
                 'order_id' => 'id',
                 'order_date' => 'date'
             ], $orderClassName))

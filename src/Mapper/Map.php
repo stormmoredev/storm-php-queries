@@ -26,9 +26,10 @@ class Map
     private string $type = "";
     private string $property = "";
 
-    public static function from(array $columns = [], string $class = 'stdClass', string $classId = 'id'): Map
+    public static function select(array $columns = [], string $class = 'stdClass', string $classId = 'id'): Map
     {
         $map = [];
+        $map['type'] = 'select';
         $map['columns'] = $columns;
         $map['class'] = $class;
         $map['id'] = $classId;
@@ -90,9 +91,19 @@ class Map
         return $map;
     }
 
-    public function isRelationship(): bool
+    public function addMapColumns(Map $map): void
+    {
+        $this->columns = array_merge($this->columns, $map->getColumns());
+    }
+
+    public function isRelationshipMap(): bool
     {
         return $this->type === "one" or $this->type === 'many' or $this->type === 'join';
+    }
+
+    public function isSelectMap(): bool
+    {
+        return $this->type == "select";
     }
 
     public function isPlainJoin(): bool
@@ -100,7 +111,7 @@ class Map
         return $this->type === "join";
     }
 
-    public function addRelationshipMap(Map $map): void
+    public function addJoinMap(Map $map): void
     {
         if ($map->type === "many") {
             $this->oneToMany[] = $map;

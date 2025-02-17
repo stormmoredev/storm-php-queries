@@ -48,7 +48,7 @@ class SqlSelectBuilder
         return $this;
     }
 
-    public function leftJoin(string $type, string|SubQuery $set, array $on): SqlSelectBuilder
+    public function leftJoin(string $type, string|SubQuery $set, string|array $on): SqlSelectBuilder
     {
         $this->joinClause->addLeftJoin($type, $set, $on);
         return $this;

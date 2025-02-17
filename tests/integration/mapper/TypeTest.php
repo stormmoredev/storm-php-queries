@@ -127,15 +127,15 @@ final class TypeTest extends TestCase
                 'order_id' => 'id',
                 'order_date' => 'date'
             ], $orderClassName))
-            ->leftJoin('shippers sh', ['sh.shipper_id' => 'o.shipper_id'], Map::one('shipper', [
+            ->leftJoin('shippers sh', 'sh.shipper_id = o.shipper_id', Map::one('shipper', [
                 'shipper_id' => 'id',
                 'shipper_name' => 'name'
             ], $shipperClassName))
-            ->leftJoin('order_details od', ['od.order_id' => 'o.order_id'], Map::many('details', [
+            ->leftJoin('order_details od', 'od.order_id = o.order_id', Map::many('details', [
                 'order_detail_id' => 'id',
                 'quantity' => 'quantity'
             ], $detailsClassName))
-            ->leftJoin('products p', ['p.product_id' => 'od.product_id'], Map::one('product', [
+            ->leftJoin('products p', 'p.product_id = od.product_id', Map::one('product', [
                 'product_id' => 'id',
                 'product_name' => 'name',
                 'price' => 'price'

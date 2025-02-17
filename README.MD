@@ -77,18 +77,18 @@ $queries
       'customer_id' => 'id',
       'customer_name' => 'name'
   ]))
-  ->leftJoin('orders o', 'o.customer_id', 'c.customer_id', Map::many("orders", [
+  ->leftJoin('orders o', 'o.customer_id = c.customer_id', Map::many("orders", [
           'order_id' => 'id'
   ]))
-  ->leftJoin('shippers sh', 'sh.shipper_id', 'o.shipper_id', Map::one('shipper', [
+  ->leftJoin('shippers sh', 'sh.shipper_id = o.shipper_id', Map::one('shipper', [
           'shipper_id' => 'id',
           'shipper_name' => 'name'
   ]))
-  ->leftJoin('order_details od', 'od.order_id', 'o.order_id', Map::many('details', [
+  ->leftJoin('order_details od', 'od.order_id = o.order_id', Map::many('details', [
       'order_detail_id' => 'id',
       'quantity' => 'quantity'
   ]))
-  ->leftJoin('products p', 'p.product_id', 'od.product_id', Map::one('product', [
+  ->leftJoin('products p', 'p.product_id = od.product_id', Map::one('product', [
       'product_id' => 'id',
       'product_name' => 'name',
       'price' => 'price'

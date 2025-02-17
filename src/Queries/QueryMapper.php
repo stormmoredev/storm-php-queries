@@ -11,7 +11,7 @@ class QueryMapper
 {
     private ?Map $from = null;
 
-    public function addJoinMap(Map $map, array $on): void
+    public function addJoinMap(Map $map, string|array $on): void
     {
         $this->from?->getTable()->hasAlias() or throw new InvalidArgumentException("Join table {$map->getTable()->table} doesn't have alias");
         $map->getTable()->hasAlias() or throw new InvalidArgumentException("Join table {$map->getTable()->table} doesn't have alias");
@@ -20,19 +20,33 @@ class QueryMapper
             return;
         }
 
-        $l = array_key_first($on);
-        $r = $on[$l];
-        $alias = "";
-        list($lAlias,) = explode('.', trim($l));
-        list($rAlias,) = explode('.', trim($r));
-        if ($lAlias == $map->getTable()->alias) {
-            $alias = $rAlias;
-        }
-        if ($rAlias == $map->getTable()->alias) {
-            $alias = $lAlias;
-        }
+        $alias = $this->getJoinedTableAlias($map, $on);
 
         $this->addMapToParentMapByAlias($map, $alias);
+    }
+
+    private function getJoinedTableAlias(Map $map, string|array $on): string
+    {
+        if (is_string($on)) {
+            $onAsArray = [];
+            $conditions = preg_split("/\s(and|or)\s/i", $on);
+            foreach($conditions as $condition) {
+                list($l, $r) = explode('=', $condition);
+                $l = trim($l);
+                $r = trim($r);
+                $onAsArray[$l] = $r;
+            }
+            $on = $onAsArray;
+        }
+
+        foreach($on as $l => $r) {
+            if (str_contains($r, '.') and str_contains($l, '.')) {
+                list($lAlias,) = explode('.', trim($l));
+                list($rAlias,) = explode('.', trim($r));
+                return $map->getTable()->alias == $lAlias  ? $rAlias : $lAlias;
+            }
+        }
+        throw new Exception("Alias for {$map->getTable()->expression} not found.");
     }
 
     private function addMapToParentMapByAlias(Map $map, string $alias): void

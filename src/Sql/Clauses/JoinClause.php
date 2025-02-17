@@ -8,7 +8,7 @@ class JoinClause
 {
     private array $joins = [];
 
-    public function addLeftJoin(string $type, string|SubQuery $set, array $columns): void
+    public function addLeftJoin(string $type, string|SubQuery $set, string|array $columns): void
     {
         $this->joins[] = [$type, $set, $columns];
     }
@@ -43,8 +43,12 @@ class JoinClause
         return implode("\n", $joins);
     }
 
-    private function toOnClause(array $columns): string
+    private function toOnClause(string|array $columns): string
     {
+        if (is_string($columns)) {
+            return $columns;
+        }
+
         $onClause = [];
         foreach($columns as $l => $r) {
             $onClause[] = "$l = $r";

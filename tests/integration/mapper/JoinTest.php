@@ -28,7 +28,7 @@ class JoinTest extends TestCase
                 'customer_id' => 'id',
                 'customer_name' => 'name'
             ]))
-            ->leftJoin('orders o', ['o.customer_id' => 'c.customer_id'], Map::many("orders", [
+            ->leftJoin('orders o', 'o.customer_id = c.customer_id', Map::many("orders", [
                 'order_id' => 'id'
             ]));
     }
@@ -42,7 +42,7 @@ class JoinTest extends TestCase
                 'customer_id' => 'id',
                 'customer_name' => 'name'
             ]))
-            ->leftJoin('orders', ['orders.customer_id' => 'c.customer_id'], Map::many("orders", [
+            ->leftJoin('orders', 'orders.customer_id = c.customer_id', Map::many("orders", [
                 'order_id' => 'id'
             ]));
     }
@@ -53,7 +53,7 @@ class JoinTest extends TestCase
 
         $this->queries
             ->from('customers c')
-            ->leftJoin('orders', ['orders.customer_id' => 'c.customer_id'], Map::many("orders", [
+            ->leftJoin('orders', 'orders.customer_id = c.customer_id', Map::many("orders", [
                 'order_id' => 'id'
             ]));
     }
@@ -65,8 +65,8 @@ class JoinTest extends TestCase
                 'product_id' => 'id',
                 'product_name' => 'name'
             ]))
-            ->leftJoin('products_tags pt', ['pt.product_id' => 'p.product_id'], Map::join())
-            ->leftJoin('tags t', ['t.tag_id' => 'pt.tag_id'], Map::many("tags", [
+            ->leftJoin('products_tags pt', 'pt.product_id = p.product_id', Map::join())
+            ->leftJoin('tags t', 't.tag_id = pt.tag_id', Map::many("tags", [
                 'tag_id' => 'id',
                 'name' => 'name'
             ]))
@@ -87,10 +87,10 @@ class JoinTest extends TestCase
                 'p.product_id' => 'id',
                 'p.product_name' => 'name',
             ]))
-            ->leftJoin('categories c', ['c.category_id' => 'p.category_id'], Map::select([
+            ->leftJoin('categories c', 'c.category_id = p.category_id', Map::select([
                 'c.category_name' => 'categoryName'
             ]))
-            ->leftJoin('suppliers s', ['s.supplier_id' => 'p.supplier_id'], Map::select([
+            ->leftJoin('suppliers s', 's.supplier_id = p.supplier_id', Map::select([
                 's.supplier_name' => 'supplierName',
             ]))
             ->findAll();
@@ -111,24 +111,24 @@ class JoinTest extends TestCase
                 'customer_id' => 'id',
                 'customer_name' => 'name'
             ]))
-            ->leftJoin('orders o', ['o.customer_id' => 'c.customer_id'], Map::many("orders", [
+            ->leftJoin('orders o', 'o.customer_id = c.customer_id', Map::many("orders", [
                     'order_id' => 'id'
             ]))
-            ->leftJoin('shippers sh', ['sh.shipper_id' => 'o.shipper_id'], Map::one('shipper', [
+            ->leftJoin('shippers sh', 'sh.shipper_id = o.shipper_id', Map::one('shipper', [
                     'shipper_id' => 'id',
                     'shipper_name' => 'name'
             ]))
-            ->leftJoin('order_details od', ['od.order_id' => 'o.order_id'], Map::many('details', [
+            ->leftJoin('order_details od', 'od.order_id = o.order_id', Map::many('details', [
                 'order_detail_id' => 'id',
                 'quantity' => 'quantity'
             ]))
-            ->leftJoin('products p', ['p.product_id' => 'od.product_id'], Map::one('product', [
+            ->leftJoin('products p', 'p.product_id = od.product_id', Map::one('product', [
                 'product_id' => 'id',
                 'product_name' => 'name',
                 'price' => 'price'
             ]))
-            ->leftJoin('products_tags pt', ['pt.product_id' => 'p.product_id'], Map::join())
-            ->leftJoin('tags t', ['t.tag_id' => 'pt.tag_id'], Map::many("tags", [
+            ->leftJoin('products_tags pt', 'pt.product_id = p.product_id', Map::join())
+            ->leftJoin('tags t', 't.tag_id = pt.tag_id', Map::many("tags", [
                 'tag_id' => 'id',
                 'name' => 'name'
             ]))
@@ -160,24 +160,24 @@ class JoinTest extends TestCase
                 'customer_id' => 'id',
                 'customer_name' => 'name'
             ], Customer::class))
-            ->leftJoin('orders o', ['o.customer_id' => 'c.customer_id'], Map::many("orders", [
+            ->leftJoin('orders o', 'o.customer_id = c.customer_id', Map::many("orders", [
                 'order_id' => 'id'
             ], Order::class))
-            ->leftJoin('shippers sh', ['sh.shipper_id' => 'o.shipper_id'], Map::one('shipper', [
+            ->leftJoin('shippers sh', 'sh.shipper_id = o.shipper_id', Map::one('shipper', [
                 'shipper_id' => 'id',
                 'shipper_name' => 'name'
             ], Shipper::class))
-            ->leftJoin('order_details od', ['od.order_id' => 'o.order_id'], Map::many('details', [
+            ->leftJoin('order_details od', 'od.order_id = o.order_id', Map::many('details', [
                 'order_detail_id' => 'id',
                 'quantity' => 'quantity'
             ], Details::class))
-            ->leftJoin('products p', ['p.product_id' => 'od.product_id'], Map::one('product', [
+            ->leftJoin('products p', 'p.product_id = od.product_id', Map::one('product', [
                 'product_id' => 'id',
                 'product_name' => 'name',
                 'price' => 'price'
             ], Product::class))
-            ->leftJoin('products_tags pt', ['pt.product_id' => 'p.product_id'], Map::join())
-            ->leftJoin('tags t', ['t.tag_id' => 'pt.tag_id'], Map::many("tags", [
+            ->leftJoin('products_tags pt', 'pt.product_id = p.product_id', Map::join())
+            ->leftJoin('tags t', 't.tag_id = pt.tag_id', Map::many("tags", [
                 'tag_id' => 'id',
                 'name' => 'name'
             ], Tag::class))

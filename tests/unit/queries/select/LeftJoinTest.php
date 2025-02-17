@@ -15,7 +15,7 @@ final class LeftJoinTest extends TestCase
         $query = $this->queries
             ->select('*')
             ->from('categories')
-            ->leftJoin('products', ['category_id' => 'category_id']);
+            ->leftJoin('products', 'category_id = category_id');
 
         $sql = remove_new_lines($query->getSql());
 
@@ -39,8 +39,8 @@ final class LeftJoinTest extends TestCase
         $query = $this->queries
             ->select('*')
             ->from('categories')
-            ->leftJoin('tab1', ['a' => 'aa'])
-            ->leftOuterJoin('tab2', ['b' => 'bb']);
+            ->leftJoin('tab1', 'a = aa')
+            ->leftOuterJoin('tab2', 'b = bb');
 
         $sql = remove_new_lines($query->getSql());
 

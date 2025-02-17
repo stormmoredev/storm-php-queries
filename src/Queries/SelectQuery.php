@@ -42,21 +42,21 @@ class SelectQuery
         return $this;
     }
 
-    public function leftJoin(string|SubQuery $set, array $on, Map $map = null): SelectQuery
+    public function leftJoin(string|SubQuery $set, string|array $on, Map $map = null): SelectQuery
     {
         $this->addJoinMap($set, $map, $on);
         $this->selectQuery->leftJoin('INNER', $set, $on);
         return $this;
     }
 
-    public function leftOuterJoin(string|SubQuery  $set, array $on, Map $map = null): SelectQuery
+    public function leftOuterJoin(string|SubQuery  $set, string|array $on, Map $map = null): SelectQuery
     {
         $this->addJoinMap($set, $map, $on);
         $this->selectQuery->leftJoin('OUTER', $set, $on);
         return $this;
     }
 
-    private function addJoinMap(string|SubQuery $set, ?Map $map, array $on): void
+    private function addJoinMap(string|SubQuery $set, ?Map $map, string|array $on): void
     {
         $rootMap = $this->queryMapper->getFromMap();
         !($map != null and $rootMap == null) or throw new InvalidArgumentException("Map for root table (from) is required");

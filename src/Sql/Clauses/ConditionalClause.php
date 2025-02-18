@@ -97,7 +97,10 @@ class ConditionalClause
             $arguments[0]($this);
             $this->tokens[] = ')';
         }
-        if ($argsNum > 1) {
+        else if ($argsNum == 2 and is_string($arguments[0]) and is_array($arguments[1])) {
+            $this->tokens[] = new StringStatement($arguments[0], $arguments[1]);
+        }
+        else if ($argsNum > 1) {
             $this->tokens[] = new BoolStatement($arguments);
         }
     }

@@ -186,6 +186,17 @@ final class WhereTest extends TestCase
         $this->assertCount(11, $items);
     }
 
+    public function testStringWhere(): void
+    {
+        $items = self::$queries
+            ->select('*')
+            ->from('customers')
+            ->where('customer_name LIKE ? and country = ?', ['%a', 'Brazil'])
+            ->findAll();
+
+        $this->assertCount(3, $items);
+    }
+
     public static function setUpBeforeClass(): void
     {
         self::$queries = ConnectionProvider::getStormQueries();

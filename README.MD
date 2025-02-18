@@ -184,6 +184,7 @@ $stormQueries
     ->where('column', '<=', 1)
     ->where('column', 'IS NULL')
     ->where('column', 'IS NOT NULL')
+    ->where('first_name = ? and last_name = ? and country = ?', ['Michael', 'Jordan', 'USA'])
 ```
 Default conjunction is `AND`. To use `OR` use `orWhere`
 

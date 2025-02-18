@@ -432,7 +432,7 @@ if ($criteria->hasSearchPhrase()) {
     $query->where('description', "LIKE", '%' . $criteria->getPhrase() . '%');
 }
 
-$products = $query->findAll($map);
+$products = $query->findAll();
 ```
 
 <a name="insertquery"></a>

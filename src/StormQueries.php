@@ -103,6 +103,19 @@ readonly class StormQueries
         return $this->createSelectQuery($table, $where, $parameters)->findAll();
     }
 
+    public function exist(string $table, string $where, mixed ...$parameters): bool
+    {
+        $query = new SelectQuery($this->connection);
+        $query->select('1');
+        $query->from($table);
+        if ($where) {
+            $query->whereString($where, $parameters);
+        }
+        $query->limit(1);
+        $item = $query->find();
+        return $item != null;
+    }
+
     private function createSelectQuery(string $table, string $where, array $parameters): SelectQuery
     {
         $map = null;

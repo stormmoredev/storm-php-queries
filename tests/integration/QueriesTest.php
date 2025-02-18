@@ -51,6 +51,20 @@ class QueriesTest extends TestCase
         $this->assertEquals("La corne d'abondance", $customers[0]->name);
     }
 
+    public function testExist(): void
+    {
+        $exist = $this->queries->exist('customers', 'customer_id = ?', 1);
+
+        $this->assertTrue($exist);
+    }
+
+    public function testNotExists(): void
+    {
+        $exist = $this->queries->exist('customers', 'customer_id = ?', 777);
+
+        $this->assertFalse($exist);
+    }
+
     public function setUp(): void
     {
         $this->queries = ConnectionProvider::getStormQueries();

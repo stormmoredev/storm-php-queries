@@ -26,18 +26,19 @@ have possibility to build queries easily and retrieve in hierarchical way.
   * [OrderBy](#orderby)
   * [GroupBy](#groupby)
   * [Having](#having)
-* [3. ORM](#orm)
-* [4. Sub queries](#subquery)
-* [5. Assembling query](#assemblingquery)
-* [6. Insert query](#insertquery)
-* [7. Update query](#updatequery)
-* [8. Delete query](#deletequery)
-* [9. Profiling nad logging queries](#profiling)
-* [10. Notice](#notice)
-* [11. Tests](#tests)
-* [12. Examples](#examples)
-* [13. Author](#author)
-* [14. License ](#license)
+* [3. Quick find queries](#quickfindqueries)
+* [4. ORM](#orm)
+* [5. Sub queries](#subquery)
+* [6. Assembling query](#assemblingquery)
+* [7. Insert query](#insertquery)
+* [8. Update query](#updatequery)
+* [9. Delete query](#deletequery)
+* [10. Profiling nad logging queries](#profiling)
+* [11. Notice](#notice)
+* [12. Tests](#tests)
+* [13. Examples](#examples)
+* [14. Author](#author)
+* [15. License ](#license)
 
 <a name="quickstart"></a>
 ## Quick start
@@ -105,10 +106,6 @@ foreach($customers as $customer) {
     }
 }                   
 ```
-
-<a name="selectquery"></a>
-## Select query
-
 Build select query with `from` method
 
 ```php
@@ -345,8 +342,38 @@ $queries
   ->findAll();
 ```
 
+<a name="quickfindqueries"></a>
+## Quick find queries
+
+### find one
+
+```php
+$customer = $queries->find('customers', 'customer_id = ?', 7);
+```
+
+### find one with map
+```php
+$customer = $queries->find('customers', 'customer_id = ?', 7, Map::select([
+    'customer_id' => 'id',
+    'customer_name' => 'name'
+]));
+```
+
+### find all 
+```php
+$customers = $queries->findAll('customers', 'country = ? and customer_name LIKE ?', 'France', '%La%');
+```
+
+### find all with map
+```php
+$customers = $queries->findAll('customers', 'country = ? and customer_name LIKE ?', 'France', '%La%', Map::select([
+    'customer_id' => 'id',
+    'customer_name' => 'name'
+]));
+```
+
 <a name="subquery"></a>
-### Sub queries
+## Sub queries
 
 #### from
 ```php

@@ -9,14 +9,17 @@ use PDOStatement;
 
 class Connection implements IConnection
 {
+
     private string $connectionString;
     private array $successCallback = [];
     private array $failCallbacks = [];
     private PDO $pdo;
+    private string $sqlDialect;
 
     public function __construct(string $connection, string $username, string $password)
     {
-        $db =
+        list($this->sqlDialect) = explode(':', $connection);
+        $this->sqlDialect = strtolower($this->sqlDialect);
         $this->connectionString = $connection;
         $this->pdo = new PDO($connection, $username, $password);
     }
@@ -142,5 +145,10 @@ class Connection implements IConnection
     public function getDatabaseType(): string
     {
         return substr($this->connectionString, 0, strpos($this->connectionString, ':'));
+    }
+
+    function getSqlDialect(): string
+    {
+        return $this->sqlDialect;
     }
 }

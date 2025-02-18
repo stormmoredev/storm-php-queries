@@ -17,7 +17,7 @@ class SelectQuery
     public function __construct(readonly private IConnection $connection)
     {
         $this->queryMapper = new QueryMapper();
-        $this->selectQuery = new SqlSelectBuilder();
+        $this->selectQuery = new SqlSelectBuilder($this->connection->getSqlDialect());
     }
 
     public function from(string|SubQuery $set, Map $map = null): SelectQuery

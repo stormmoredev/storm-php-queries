@@ -22,4 +22,6 @@ interface IConnection
     public function onSuccess(callable $callback): void;
 
     public function onFailure(callable $callback): void;
+
+    function getSqlDialect();
 }

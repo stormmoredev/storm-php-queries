@@ -11,6 +11,7 @@ use Stormmore\Queries\Sql\Clauses\SelectClause;
 
 class SqlSelectBuilder
 {
+    private ?string $sqlDialect;
     private string $table = "";
     private SelectClause $selectClause;
     private JoinClause $joinClause;
@@ -21,8 +22,9 @@ class SqlSelectBuilder
     private ?int $limitRecords = null;
     private ?int $offsetRecords = null;
 
-    public function __construct()
+    public function __construct(string $sqlDialect = null)
     {
+        $this->sqlDialect = $sqlDialect;
         $this->joinClause = new JoinClause();
         $this->whereClause = new ConditionalClause('WHERE');
         $this->havingClause = new ConditionalClause('HAVING');
@@ -135,9 +137,10 @@ class SqlSelectBuilder
         $statement[] = $this->toGroupByClause();
         $statement[] = $this->havingClause->toString();
         $statement[] = $this->orderByClause->toString();
-        $statement[] = $this->toLimitClause();
         $statement[] = $this->toOffsetClause();
-        
+        $statement[] = $this->toLimitClause();
+
+
         return implode("\n", array_filter($statement, function($element) { return !empty($element); }));
     }
 
@@ -164,18 +167,32 @@ class SqlSelectBuilder
         return $clause;
     }
 
-    private function toLimitClause(): string
+    private function toOffsetClause(): string
     {
-        if ($this->limitRecords !== null) {
-            return "LIMIT $this->limitRecords";
+        /*
+         * OFFSET  5 ROWS
+           FETCH NEXT 5 ROWS ONLY
+         */
+        if ($this->sqlDialect == "sqlsrv" and $this->offsetRecords === null and $this->limitRecords !== null) {
+            return "OFFSET 0 ROWS";
+        }
+
+        if ($this->offsetRecords !== null) {
+            if ($this->sqlDialect == "sqlsrv") {
+                return "OFFSET $this->offsetRecords ROWS";
+            }
+            return "OFFSET $this->offsetRecords";
         }
         return '';
     }
 
-    private function toOffsetClause(): string
+    private function toLimitClause(): string
     {
-        if ($this->offsetRecords !== null) {
-            return "OFFSET $this->offsetRecords";
+        if ($this->limitRecords !== null) {
+            if ($this->sqlDialect == "sqlsrv") {
+                return "FETCH NEXT {$this->limitRecords} ROWS ONLY";
+            }
+            return "LIMIT $this->limitRecords";
         }
         return '';
     }

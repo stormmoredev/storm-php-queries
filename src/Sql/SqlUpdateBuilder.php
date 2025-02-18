@@ -6,6 +6,7 @@ use Stormmore\Queries\Sql\Clauses\ConditionalClause;
 class SqlUpdateBuilder
 {
     private string $tableName;
+    private ?string $setClause = null;
     private array $values;
     private ConditionalClause $whereClause;
 
@@ -38,6 +39,13 @@ class SqlUpdateBuilder
         return $this;
     }
 
+    public function setClause(string $sql, array $values): SqlUpdateBuilder
+    {
+        $this->setClause = $sql;
+        $this->values = $values;
+        return $this;
+    }
+
     public function toSql(): string
     {
         $statement = [];
@@ -55,6 +63,9 @@ class SqlUpdateBuilder
 
     private function toSetString(): string
     {
+        if ($this->setClause) {
+            return "SET {$this->setClause}";
+        }
         $set = [];
         $keys = array_keys($this->values);
         foreach($keys as $key) {

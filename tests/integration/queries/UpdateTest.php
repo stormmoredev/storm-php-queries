@@ -31,6 +31,14 @@ final class UpdateTest extends TestCase
         $this->assertEquals('second-u', $item->name);
     }
 
+    public function testWithSet(): void
+    {
+        self::$queries->update('update_test', 'id = ?', 3)->set('name = ?', '3')->execute();
+        $item = self::$queries->select('*')->from('update_test')->where('id', 3)->find();
+
+        $this->assertEquals('3', $item->name);
+    }
+
     public static function setUpBeforeClass(): void
     {
         self::$queries = ConnectionProvider::getStormQueries();

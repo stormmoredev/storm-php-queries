@@ -64,8 +64,6 @@ readonly class StormQueries
 
     public function update($table, string $where = '', mixed ... $parameters): UpdateQuery
     {
-
-
         $query = new UpdateQuery($this->connection);
         $query->update($table);
 
@@ -111,7 +109,6 @@ readonly class StormQueries
         if ($where) {
             $query->whereString($where, $parameters);
         }
-        $query->limit(1);
         $item = $query->find();
         return $item != null;
     }

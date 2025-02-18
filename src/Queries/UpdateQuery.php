@@ -21,6 +21,13 @@ class UpdateQuery
         return $this;
     }
 
+    public function set(string $sql, mixed ...$values): UpdateQuery
+    {
+        $normalized = ParameterNormalizer::normalize($values);
+        $this->updateBuilder->setClause($sql, $normalized);
+        return $this;
+    }
+
     public function setValues(array $values): UpdateQuery
     {
         $normalized = ParameterNormalizer::normalize($values);

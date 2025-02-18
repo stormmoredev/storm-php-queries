@@ -373,6 +373,11 @@ $customers = $queries->findAll('customers', 'country = ? and customer_name LIKE 
 ]));
 ```
 
+### exists
+```php
+$exist = $queries->exists('customers', 'email = ?', 'john@doe.com');
+```
+
 <a name="subquery"></a>
 ## Sub queries
 
@@ -380,7 +385,7 @@ $customers = $queries->findAll('customers', 'country = ? and customer_name LIKE 
 ```php
 $queries
 ->from(
-    SubQuery::create($this->queries->from('products'), 'p')
+    SubQuery::create($queries->from('products'), 'p')
 )
 ->where('p.product_id', 7)
 ->find();
@@ -389,10 +394,10 @@ $queries
 ```php
 $queries
 ->from(
-    SubQuery::create($this->queries->from('products'), 'p')
+    SubQuery::create($queries->from('products'), 'p')
 )
 ->leftJoin(
-    SubQuery::create($this->queries->from('suppliers'), 's'), 's.supplier_id', 'p.supplier_id')
+    SubQuery::create($queries->from('suppliers'), 's'), 's.supplier_id', 'p.supplier_id')
 )
 ->findAll();
 ```
@@ -403,7 +408,7 @@ $queries
 ->from("products")
 ->where("category_id", 1)
 ->where('price', '<=',
-    $this->queries
+    $queries
         ->select("avg(price)")
         ->from("products")
         ->where("category_id", 1)

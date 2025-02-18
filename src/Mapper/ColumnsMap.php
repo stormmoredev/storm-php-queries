@@ -19,6 +19,9 @@ class ColumnsMap
         foreach($columns as $columnName => $fieldName) {
             if (is_int($columnName)) {
                 $columnName = $fieldName;
+                if (str_contains($fieldName, '.')) {
+                    $fieldName = substr($fieldName, strrpos($fieldName, '.') + 1);
+                }
             }
             $this->columns[] = new ColumnDescription($columnName, $fieldName, $this->table->getPrefix());
         }

@@ -12,21 +12,19 @@ final class UpdateTest extends TestCase
 
     public function testUpdate(): void
     {
-        $query = self::$queries
+        self::$queries
             ->update('update_test')
             ->where('id', 1)
-            ->setValues([
-                'name' => 'first-u'
-            ]);
-        $query->execute();
+            ->setValues(array('name' => 'first-u'))
+            ->execute();
         $item = self::$queries->select('*')->from('update_test')->where('id', 1)->find();
 
         $this->assertEquals('first-u', $item->name);
     }
 
-    public function testUpdateWithOneInvoke(): void
+    public function testQuickUpdate(): void
     {
-        self::$queries->update('update_test', ['name' => 'second-u'])->where('id', 2)->execute();
+        self::$queries->update('update_test', 'id = ?', 2, ['name' => 'second-u'])->execute();
 
         $item = self::$queries->select('*')->from('update_test')->where('id', 2)->find();
 

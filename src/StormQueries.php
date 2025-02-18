@@ -62,6 +62,37 @@ readonly class StormQueries
         return $selectQuery;
     }
 
+    public function update($table, string $where = '', mixed ... $parameters): UpdateQuery
+    {
+
+
+        $query = new UpdateQuery($this->connection);
+        $query->update($table);
+
+        if (!empty($where)) {
+            $values = array();
+            if (count($parameters) and is_array($parameters[count($parameters) - 1])) {
+                $values = array_pop($parameters);
+            }
+            $query->where($where, $parameters);
+            if (count($values)) {
+                $query->setValues($values);
+            }
+        }
+
+        return $query;
+    }
+
+    public function delete($table, string $where = '', ...$parameters): DeleteQuery
+    {
+        $query = new DeleteQuery($this->connection);
+        $query->from($table);
+        if (!empty($where)) {
+            $query->whereString($where, $parameters);
+        }
+        return $query;
+    }
+
     public function find(string $table, string $where, mixed ... $parameters): ?object
     {
         return $this->createSelectQuery($table, $where, $parameters)->find();
@@ -70,26 +101,6 @@ readonly class StormQueries
     public function findAll(string $table, string $where, mixed ... $parameters): array
     {
         return $this->createSelectQuery($table, $where, $parameters)->findAll();
-    }
-
-    public function update($table, $values = array()): UpdateQuery
-    {
-        $query = new UpdateQuery($this->connection);
-        $query->update($table);
-        if (count($values)) {
-            $query->setValues($values);
-        }
-        return $query;
-    }
-
-    public function delete($table, string $where ='', ...$parameters): DeleteQuery
-    {
-        $query = new DeleteQuery($this->connection);
-        $query->from($table);
-        if (!empty($where)) {
-            $query->whereString($where, $parameters);
-        }
-        return $query;
     }
 
     private function createSelectQuery(string $table, string $where, array $parameters): SelectQuery

@@ -21,7 +21,7 @@ have possibility to build queries easily and retrieve in hierarchical way.
 * [1. Quick start](#quickstart)
 * [2. Select query](#selectquery)
   * [Aggregation functions](#aggregatefunctions)
-  * [Left join](#leftjoin)
+  * [Join/Left join](#leftjoin)
   * [Where](#where)
   * [OrderBy](#orderby)
   * [GroupBy](#groupby)
@@ -109,11 +109,11 @@ foreach($customers as $customer) {
 Build select query with `from` method
 
 ```php
-$stormQueries->from('tableName', 'id = ?', 2)->find();
+$queries->from('tableName', 'id = ?', 2)->find();
 ```
 Build it with fluent API
 ```php
-$stormQueries
+$queries
     ->select("column1", "column2", "column3")
     ->from('tableName')
     ->where('id', 2);
@@ -122,8 +122,8 @@ $stormQueries
 
 StormQueries is made to handle assembling queries step by step in various scenarios so every time you invoke methods like\
 `select`
+`join`
 `leftJoin`
-`leftOuterJoin`
 `where`
 `orWhere`
 `having`
@@ -134,43 +134,43 @@ StormQueries is made to handle assembling queries step by step in various scenar
 they add parameters instead replacing them to final query
 
 ```php
-$stormQueries->select('columnA')->select('columnB')->select('columnC');
+$queries->select('columnA')->select('columnB')->select('columnC');
 ```
 builds `SELECT columnA, columnB, columnC`
 
 ### Short select
 ```php
-$stormQueries->from('customers')->find();
-$stormQueries->from('customers', 'name LIKE ? AND city = ?', 'M%' 'London')->find();
-$stormQueries->from('customers', 'id = ?', 14]->find();
-$stormQueries->from('customers')->where('id', 14)->find();
+$queries->from('customers')->find();
+$queries->from('customers', 'name LIKE ? AND city = ?', 'M%' 'London')->find();
+$queries->from('customers', 'id = ?', 14]->find();
+$queries->from('customers')->where('id', 14)->find();
 ```
 
 <a name="aggregatefunctions"></a>
 ### Aggregation functions 
 
  ```php
-$stormQueries->from('products', 'category_id = ?', 7)->count();
-$stormQueries->from('products', 'category_id = ?', 7)->min('price');
-$stormQueries->from('products', 'category_id = ?', 7)->max('price');
-$stormQueries->from('products', 'category_id = ?', 7)->sum('price');
-$stormQueries->from('products', 'category_id = ?', 7)->avg('price');
+$queries->from('products', 'category_id = ?', 7)->count();
+$queries->from('products', 'category_id = ?', 7)->min('price');
+$queries->from('products', 'category_id = ?', 7)->max('price');
+$queries->from('products', 'category_id = ?', 7)->sum('price');
+$queries->from('products', 'category_id = ?', 7)->avg('price');
  ```
 
 <a name="leftjoin"></a>
 ### Left join 
 ```php
-$stormQueries
+$queries
     ->from('tableA')
-    ->leftJoin('tableB', 'tableB.id', 'tableA.id')
-    ->leftOuterJoin('tableC', 'tableC.id', 'tableA.id')
+    ->join('tableB', 'tableB.id', 'tableA.id')
+    ->leftJoin('tableC', 'tableC.id', 'tableA.id')
     ->find();
 ```
 
 <a name="where"></a>
 ### Where 
 ```php
-$stormQueries
+$queries
     ->from('tableA')
     ->where('column', 'val1')
     ->where('column', '=', 'val1')
@@ -185,11 +185,11 @@ $stormQueries
     ->where('column', 'IS NULL')
     ->where('column', 'IS NOT NULL')
     ->where('first_name = ? and last_name = ? and country = ?', ['Michael', 'Jordan', 'USA'])
-```
+``` 
 Default conjunction is `AND`. To use `OR` use `orWhere`
 
 ```php
-$stormQueries
+$queries
     ->from('tableA')
     ->where('columnA', 'val1')
     ->orWhere('column', 'IN', ['val2', 'val3'])
@@ -198,7 +198,7 @@ $stormQueries
 #### Nested conditions
 If you want to use group of conditions enclosed in parenthesis use closure
 ```php
-$stormQueries
+$queries
     ->from('tableA')
     ->where('columnA', 'val1')
     ->where(function($query) {
@@ -209,24 +209,24 @@ $stormQueries
 <a name="orderby"></a>
 ### OrderBy
 ```php
-$stormQueries->from('table')->orderByDesc('column1');
-$stormQueries->from('table')->orderByAsc('column1');
-$stormQueries->from('table')->orderBy('column1', -1); //descending 
-$stormQueries->from('table')->orderBy('column1', 1) //ascending
-$stormQueries->from('table')->orderByDesc('column1')->orderByDesc('column2');
+$queries->from('table')->orderByDesc('column1');
+$queries->from('table')->orderByAsc('column1');
+$queries->from('table')->orderBy('column1', -1); //descending 
+$queries->from('table')->orderBy('column1', 1) //ascending
+$queries->from('table')->orderByDesc('column1')->orderByDesc('column2');
 ```
 
 <a name="groupby"></a>
 ### GroupBy
 ```php
-$stormQueries->from('table')->groupBy('column1', 'column2');
-$stormQueries->from('table')->groupBy('column1')->groupBy('column2')->groupBy('column3')
+$queries->from('table')->groupBy('column1', 'column2');
+$queries->from('table')->groupBy('column1')->groupBy('column2')->groupBy('column3')
 ```
 <a name="having"></a>
 ### Having 
 Everything what refers to `where` or `orWhere` refers to `having` and `orHaving`
 ```php
-$stormQueries
+$queries
     ->select('country, city, count(*)')
     ->from('customers')
     ->groupBy('country, city')
@@ -378,7 +378,7 @@ $customers = $queries->findAll('customers', 'country = ? and customer_name LIKE 
 
 #### from
 ```php
-$stormQueries
+$queries
 ->from(
     SubQuery::create($this->queries->from('products'), 'p')
 )
@@ -387,7 +387,7 @@ $stormQueries
 ```
 #### left join
 ```php
-$stormQueries
+$queries
 ->from(
     SubQuery::create($this->queries->from('products'), 'p')
 )
@@ -399,7 +399,7 @@ $stormQueries
 
 #### where 
 ```php
-$stormQueries
+$queries
 ->from("products")
 ->where("category_id", 1)
 ->where('price', '<=',
@@ -418,65 +418,62 @@ Using joins requires using aliases in `from` and `join` clause.
 ## Assembling query
 
 ```php 
-function find_products($criteria): array
-{      
-    $query = $stormQueries
-        ->from('products')
-        ->leftJoin('product_photos', 'product_photos.product_id', 'products.id')
-        ->where('is_in_sale', true);
-    if ($criteria->hasCategory()) {
-        $query->where('category_id', $criteria->getCategoryId());
-    }
-    if ($criteria->hasOrder()) {
-        $query->orderBy($criteria->getOrderField(), $criteria->getOrderDirection());
-    }
-    if ($criteria->hasSearchPhrase()) {
-        $query->where('description', "LIKE", '%' . $criteria->getPhrase() . '%');
-    }
-    
-    return $query->findAll($map);
+$query = $queries
+    ->from('products')
+    ->join('product_photos', 'product_photos.product_id', 'products.id')
+    ->where('is_in_sale', true);
+if ($criteria->hasCategory()) {
+    $query->where('category_id', $criteria->getCategoryId());
+}
+if ($criteria->hasOrder()) {
+    $query->orderBy($criteria->getOrderField(), $criteria->getOrderDirection());
+}
+if ($criteria->hasSearchPhrase()) {
+    $query->where('description', "LIKE", '%' . $criteria->getPhrase() . '%');
 }
 
-$criteria = ProductCriteria::create()
-    ->withCategoryId($request->get('category-id'))
-    ->phrase($request->get('search-phrase'))
-    ->orderBy($request->get('order-field'), $request->get('order-direction'))
-
-$products = find_products($stormQueries, $criteria);
+$products = $query->findAll($map);
 ```
 
 <a name="insertquery"></a>
 ## Insert
 ```php
-$id = $stormQueries->insert('person', ['name' => 'Micheal'])->execute();
+$id = $queries->insert('person', ['name' => 'Micheal'])->execute();
 ```
 If you don't want to invoke `getLastInsertedId` on `PDO` pass `false` to `execute` method
 ```php
-$stormQueries->insert('person', ['name' => 'Micheal'])->execute(false);
+$queries->insert('person', ['name' => 'Micheal'])->execute(false);
 ```
 
 ### Insert many
 ```php
-$stormQueries
+$queries
 ->insertMany('person', [
     ['name' => 'Michael'],
     ['name' => 'Kevin'],
     ['name' => 'LeBron']
 ])
-->execute();
+->execute(); 
 ```
 
 <a name="updatequery"></a>
 ## Update 
 ```php
-$stormQueries->update('person', ['name' => 'Matthew'])->where('id', 2)->execute();
+$queries->update('person')->where('id', 2)->setValues(['name' => 'Matthew'])->execute();
+```
+or
+```php
+$queries->update('person', 'id = ?', 2, ['name' => 'Matthew'])->execute();
 ```
 
 <a name="deletequery"></a>
 ## Delete 
 ```php
-$stormQueries->delete('person')->where('id', 1)->execute();
-$stormQueries->delete('person', 'id = ?', 1)->execute();
+$queries->delete('person')->where('id', 1)->execute();
+```
+or
+```php
+$queries->delete('person', 'id = ?', 1)->execute();
 ```
 
 <a name="profiling"></a>

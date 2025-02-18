@@ -59,9 +59,17 @@ readonly class StormQueries
         if (!empty($whereString)) {
             $selectQuery->whereString($whereString, $parameters);
         }
-
-
         return $selectQuery;
+    }
+
+    public function find(string $table, string $where, mixed ... $parameters): ?object
+    {
+        return $this->createSelectQuery($table, $where, $parameters)->find();
+    }
+
+    public function findAll(string $table, string $where, mixed ... $parameters): array
+    {
+        return $this->createSelectQuery($table, $where, $parameters)->findAll();
     }
 
     public function update($table, $values = array()): UpdateQuery
@@ -82,5 +90,18 @@ readonly class StormQueries
             $query->whereString($where, $parameters);
         }
         return $query;
+    }
+
+    private function createSelectQuery(string $table, string $where, array $parameters): SelectQuery
+    {
+        $map = null;
+        if (count($parameters) and $parameters[count($parameters) - 1] instanceof Map) {
+            $map = array_pop($parameters);
+        }
+        $selectQuery = new SelectQuery($this->connection);
+        $selectQuery->select('*');
+        $selectQuery->from($table, $map);
+        $selectQuery->whereString($where, $parameters);
+        return $selectQuery;
     }
 }

@@ -21,10 +21,10 @@ class UpdateQuery
         return $this;
     }
 
-    public function set(string $sql, mixed ...$values): UpdateQuery
+    public function setExpression(string $expression, mixed ...$values): UpdateQuery
     {
         $normalized = ParameterNormalizer::normalize($values);
-        $this->updateBuilder->setClause($sql, $normalized);
+        $this->updateBuilder->setExpression($expression, $normalized);
         return $this;
     }
 

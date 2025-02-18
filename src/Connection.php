@@ -16,6 +16,7 @@ class Connection implements IConnection
 
     public function __construct(string $connection, string $username, string $password)
     {
+        $db =
         $this->connectionString = $connection;
         $this->pdo = new PDO($connection, $username, $password);
     }

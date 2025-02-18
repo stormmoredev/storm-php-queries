@@ -1,6 +1,6 @@
 <?php
 
-namespace integration;
+namespace integration\queries;
 
 use data\ConnectionProvider;
 use PHPUnit\Framework\TestCase;

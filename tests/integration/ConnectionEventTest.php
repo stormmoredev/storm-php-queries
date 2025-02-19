@@ -24,7 +24,7 @@ final class ConnectionEventTest  extends TestCase
         });
 
         $queries = new StormQueries($connection);
-        $queries->select('*')
+        $queries->selectQuery('*')
             ->from('customers')
             ->where('customer_id', 5)
             ->findAll();
@@ -41,7 +41,7 @@ final class ConnectionEventTest  extends TestCase
         });
         $queries = new StormQueries($connection);
         try {
-            $queries->select('*')
+            $queries->selectQuery('*')
                 ->from('customers')
                 ->where('customer_i', 5)
                 ->findAll();

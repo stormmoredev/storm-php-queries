@@ -91,31 +91,36 @@ readonly class StormQueries
         $query->execute();
     }
 
-    public function select(...$fields): SelectQuery
+    public function selectQuery(...$fields): SelectQuery
     {
         $selectQuery = new SelectQuery($this->connection);
         call_user_func_array([$selectQuery, 'select'], func_get_args());
         return $selectQuery;
     }
 
-    public function from(string|SubQuery $set, mixed ...$parameters): SelectQuery
+    public function from(string|SubQuery $set, Map $map = null): SelectQuery
     {
-        $map = null;
-        $whereString = null;
-        $count = count($parameters);
-        if ($count and $parameters[$count - 1] instanceof Map) {
-            $map = array_pop($parameters);
-            $count--;
-        }
-        if ($count and is_string($parameters[0])) {
-            $whereString  = array_shift($parameters);
-        }
-
         $selectQuery = new SelectQuery($this->connection);
         $selectQuery->select('*');
         $selectQuery->from($set, $map);
-        if (!empty($whereString)) {
-            $selectQuery->whereString($whereString, $parameters);
+        return $selectQuery;
+    }
+
+    public function select(string|SubQuery $table, mixed ...$parameters): SelectQuery
+    {
+        $map = null;
+        if (count($parameters)) {
+            if ($parameters[0] instanceof Map) {
+                $map = $parameters[0];
+                array_shift($parameters);
+            }
+        }
+        $selectQuery = new SelectQuery($this->connection);
+        $selectQuery->from($table, $map);
+        if (count($parameters)) {
+            $selectQuery->select($parameters);
+        } else {
+            $selectQuery->select("*");
         }
         return $selectQuery;
     }
@@ -128,6 +133,16 @@ readonly class StormQueries
     public function findAll(string $table, string|array $where, mixed ... $parameters): array
     {
         return $this->getBasicFindQuery("*", $table, $where, $parameters)->findAll();
+    }
+
+    public function count(string $table, string|array $where = '', mixed ...$parameters): int
+    {
+        return $this->getBasicFindQuery('count(*) as count', $table, $where, $parameters)->find()->count;
+    }
+
+    public function exist(string $table, string|array $where, mixed ...$parameters): bool
+    {
+        return $this->getBasicFindQuery('1', $table, $where, $parameters)->find() != null;
     }
 
     private function getBasicFindQuery(string $select, string $table, string|array $where, array $parameters): SelectQuery
@@ -144,42 +159,9 @@ readonly class StormQueries
                 $selectQuery->where($field, $value);
             }
         }
-        if(is_string($where)) {
+        if(is_string($where) and !empty($where)) {
             $selectQuery->whereString($where, $parameters);
         }
         return $selectQuery;
-    }
-
-    public function count(string $table, string|array $where = '', mixed ...$parameters): int
-    {
-        $query = new SelectQuery($this->connection);
-        $query->select('count(*) as count');
-        $query->from($table);
-        if (is_array($where)) {
-            foreach ($where as $field => $value) {
-                $query->where($field, $value);
-            }
-        }
-        if (is_string($where) and !empty($where)) {
-            $query->whereString($where, $parameters);
-        }
-        return $query->find()->count;
-    }
-
-    public function exist(string $table, string|array $where, mixed ...$parameters): bool
-    {
-        $query = new SelectQuery($this->connection);
-        $query->select('1');
-        $query->from($table);
-        if (is_array($where)) {
-            foreach ($where as $field => $value) {
-                $query->where($field, $value);
-            }
-        }
-        if (is_string($where)) {
-            $query->whereString($where, $parameters);
-        }
-        $item = $query->find();
-        return $item != null;
     }
 }

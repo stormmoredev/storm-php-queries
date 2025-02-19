@@ -13,7 +13,7 @@ final class SelectTest extends TestCase
     public function testFindOne(): void
     {
         $item = self::$queries
-            ->select('*')
+            ->selectQuery('*')
             ->from('customers')
             ->where('city', 'London')
             ->find();
@@ -24,19 +24,12 @@ final class SelectTest extends TestCase
     public function testFindAll(): void
     {
         $items = self::$queries
-            ->select('*')
+            ->selectQuery('*')
             ->from('customers')
             ->where('city', 'London')
             ->findAll();
 
         $this->assertCount(6, $items);
-    }
-
-    public function testShortSelect(): void
-    {
-        $customers = self::$queries->from('customers', 'country = ?', 'France')->findAll();
-
-        $this->assertCount(11, $customers);
     }
 
     public function testMinFunction(): void

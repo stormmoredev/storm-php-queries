@@ -15,11 +15,11 @@ class SubqueryTest extends TestCase
     public function testWhereSubquery(): void
     {
         $items = $this->queries
-            ->from("products")
+            ->select("products")
             ->where("category_id", 1)
             ->where('price', '<=',
                 $this->queries
-                    ->select("avg(price)")
+                    ->selectQuery("avg(price)")
                     ->from("products")
                     ->where("category_id", 1)
             )
@@ -31,7 +31,7 @@ class SubqueryTest extends TestCase
     public function testFromSubquery(): void
     {
         $items = $this->queries
-            ->from(SubQuery::create($this->queries->from('products'), 'p'))
+            ->select(SubQuery::create($this->queries->select('products'), 'p'))
             ->orderByAsc('p.product_id')
             ->findAll();
 
@@ -43,7 +43,7 @@ class SubqueryTest extends TestCase
     public function testFromSubqueryWithJoin(): void
     {
         $items = $this->queries
-            ->from(SubQuery::create($this->queries->from('products'), 'p'))
+            ->select(SubQuery::create($this->queries->select('products'), 'p'))
             ->leftJoin('suppliers s', 's.supplier_id = p.supplier_id')
             ->orderByAsc('p.product_id')
             ->findAll();
@@ -58,8 +58,8 @@ class SubqueryTest extends TestCase
     public function testFromSubqueryWithSubqueryJoin(): void
     {
         $items = $this->queries
-            ->from(SubQuery::create($this->queries->from('products'), 'p'))
-            ->leftJoin(SubQuery::create($this->queries->from('suppliers'), 's'), 's.supplier_id = p.supplier_id')
+            ->select(SubQuery::create($this->queries->select('products'), 'p'))
+            ->leftJoin(SubQuery::create($this->queries->select('suppliers'), 's'), 's.supplier_id = p.supplier_id')
             ->orderByAsc('p.product_id')
             ->findAll();
 
@@ -73,8 +73,8 @@ class SubqueryTest extends TestCase
     public function testFromWithSubqueryJoin(): void
     {
         $items = $this->queries
-            ->from('products p')
-            ->leftJoin(SubQuery::create($this->queries->from('suppliers'), 's'), 's.supplier_id = p.supplier_id')
+            ->select('products p')
+            ->leftJoin(SubQuery::create($this->queries->select('suppliers'), 's'), 's.supplier_id = p.supplier_id')
             ->orderByAsc('p.product_id')
             ->findAll();
 
@@ -88,7 +88,7 @@ class SubqueryTest extends TestCase
     public function testFromSubqueryWithMap(): void
     {
         $items = $this->queries
-            ->from(SubQuery::create($this->queries->from('products'), 'p'), Map::select([
+            ->select(SubQuery::create($this->queries->select('products'), 'p'), Map::select([
                 'product_id' => 'id',
                 'product_name' => 'name'
             ]))
@@ -101,7 +101,7 @@ class SubqueryTest extends TestCase
     public function testLeftJoinSubqueryWithMap(): void
     {
         $items = $this->queries
-            ->from(SubQuery::create($this->queries->from('orders'), 'o'), Map::select([
+            ->select(SubQuery::create($this->queries->select('orders'), 'o'), Map::select([
                 'order_id' => 'id',
                 'order_date' => 'date'
             ]))
@@ -125,11 +125,11 @@ class SubqueryTest extends TestCase
     public function testFromSubqueryWithSubqueryJoinAndMap(): void
     {
         $items = $this->queries
-            ->from(SubQuery::create($this->queries->from('orders'), 'o'), Map::select([
+            ->select(SubQuery::create($this->queries->select('orders'), 'o'), Map::select([
                 'order_id' => 'id',
                 'order_date' => 'date'
             ]))
-            ->leftJoin(SubQuery::create($this->queries->from('order_details'), 'od'), 'od.order_id = o.order_id', Map::many('details', [
+            ->leftJoin(SubQuery::create($this->queries->select('order_details'), 'od'), 'od.order_id = o.order_id', Map::many('details', [
                 'order_detail_id' => 'id',
                 'quantity' => 'quantity'
             ]))

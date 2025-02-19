@@ -13,7 +13,7 @@ final class HavingTest extends TestCase
     public function testHaving(): void
     {
         $items = self::$queries
-            ->select('country, city, count(*)')
+            ->selectQuery('country, city, count(*)')
             ->from('customers')
             ->groupBy('country, city')
             ->having('count(*)', '>', 1)

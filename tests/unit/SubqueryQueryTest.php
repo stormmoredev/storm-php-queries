@@ -13,12 +13,12 @@ final class SubqueryQueryTest extends TestCase
     public function testParameters(): void
     {
         $query = $this->queries
-            ->select('*')
+            ->selectQuery('*')
             ->from('users')
             ->where('fieldA', '=', 'val1')
             ->where('field4', 'IN',
                 $this->queries
-                    ->select('*')
+                    ->selectQuery('*')
                     ->from('table')
                     ->where('FieldB', '=', 5))
                     ->orWhere('FieldC', '=', 'valB')
@@ -32,12 +32,12 @@ final class SubqueryQueryTest extends TestCase
     public function testSql(): void
     {
         $query = $this->queries
-            ->select('*')
+            ->selectQuery('*')
             ->from('users')
             ->where('fieldA', '=', 'val1')
             ->where('field4', 'IN',
                 $this->queries
-                    ->select('*')
+                    ->selectQuery('*')
                     ->from('table')
                     ->where('fieldB', '=', 5))
             ->orWhere('fieldC', '=', 'valB')

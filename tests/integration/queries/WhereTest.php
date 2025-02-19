@@ -197,6 +197,17 @@ final class WhereTest extends TestCase
         $this->assertCount(3, $items);
     }
 
+    public function testWhereArray(): void
+    {
+        $items = self::$queries
+            ->select('*')
+            ->from('customers')
+            ->where(['country' => 'France', 'city' => 'Paris'])
+            ->findAll();
+
+        $this->assertCount(2, $items);
+    }
+
     public static function setUpBeforeClass(): void
     {
         self::$queries = ConnectionProvider::getStormQueries();

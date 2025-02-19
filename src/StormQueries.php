@@ -150,22 +150,36 @@ readonly class StormQueries
         return $selectQuery;
     }
 
+    public function count(string $table, string|array $where = '', mixed ...$parameters): int
+    {
+        $query = new SelectQuery($this->connection);
+        $query->select('count(*) as count');
+        $query->from($table);
+        if (is_array($where)) {
+            foreach ($where as $field => $value) {
+                $query->where($field, $value);
+            }
+        }
+        if (is_string($where) and !empty($where)) {
+            $query->whereString($where, $parameters);
+        }
+        return $query->find()->count;
+    }
+
     public function exist(string $table, string|array $where, mixed ...$parameters): bool
     {
         $query = new SelectQuery($this->connection);
         $query->select('1');
         $query->from($table);
-        if(is_array($where)) {
-            foreach($where as $field => $value) {
+        if (is_array($where)) {
+            foreach ($where as $field => $value) {
                 $query->where($field, $value);
             }
         }
-        if(is_string($where)) {
+        if (is_string($where)) {
             $query->whereString($where, $parameters);
         }
         $item = $query->find();
         return $item != null;
     }
-
-
 }

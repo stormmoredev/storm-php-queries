@@ -76,21 +76,28 @@ $products = $queries->findAll('products', ['category_id' => 10]);
 
 Inserting product
 ```php
-$query->insert('products', ['name' => 'Golden socks', 'price' => 777])->execute();
+$query->insert('products', ['name' => 'Golden socks', 'price' => 777]);
 ```
 Updating product
 ```php
-$queries->update('products', 'id = ?', 5, ['name' => 'Renamed product'])->execute();
+$queries->update('products', 'id = ?', 5, ['name' => 'Renamed product']);
 //or
-$queries->update('products', ['id' => 5], ['name' => 'Renamed product'])->execute();
+$queries->update('products', ['id' => 5], ['name' => 'Renamed product']);
 ```
 
 Deleting product
 ```php
-$queries->delete('products', 'id = ?', 5)->execute();
+$queries->delete('products', 'id = ?', 5);
 //or
-$queries->delete('products', ['id' => 5])->execute();
+$queries->delete('products', ['id' => 5]);
 ```
+
+Count products
+```php
+$count = $queries->count('products', 'in_sale', true);
+or
+$count = $queries->count('products', ['in_sale' => true]);
+````
 
 Check if product exists
 ```php
@@ -238,7 +245,12 @@ $queries
     ->where('column', '<=', 1)
     ->where('column', 'IS NULL')
     ->where('column', 'IS NOT NULL')
-    ->where('first_name = ? and last_name = ? and country = ?', ['Michael', 'Jordan', 'USA'])
+    ->where('columnA = ? and columnB = ? and columnC = ?', ['valA', 'valB', 3])
+    ->where([
+        'columnA' => 'valA',
+        'columnB' => 'valB',
+        'columnC' => 3
+    ])
 ``` 
 Default conjunction is `AND`. To use `OR` use `orWhere`
 

@@ -13,7 +13,7 @@ final class DeleteTest extends TestCase
         $queries = ConnectionProvider::getStormQueries();
         $queries->delete('delete_test', ['id' => 1]);
 
-        $count = $queries->from('delete_test')->count();
+        $count = $queries->count('delete_test');
 
         $this->assertEquals(2, $count);
     }
@@ -23,7 +23,7 @@ final class DeleteTest extends TestCase
         $queries = ConnectionProvider::getStormQueries();
         $queries->delete('delete_test', 'id = ?', 2);
 
-        $count = $queries->from('delete_test')->count();
+        $count = $queries->count('delete_test');
 
         $this->assertEquals(1, $count);
     }

@@ -91,11 +91,23 @@ class ConditionalClause
 
         $this->addOperator($operator);
 
-        if ($argsNum == 1) {
-            is_callable($arguments[0]) or throw new InvalidArgumentException("In case of one argument it should be function");
+        if ($argsNum == 1 and is_callable($arguments[0])) {
             $this->tokens[] = '(';
             $arguments[0]($this);
             $this->tokens[] = ')';
+        }
+        else if ($argsNum == 1 and is_array($arguments[0])) {
+            $i = 1;
+            foreach ($arguments[0] as $field => $value) {
+                $this->tokens[] = new BoolStatement([$field, "=", $value]);
+                if ($i < count($arguments[0])) {
+                    $this->addOperator('AND');
+                    $i++;
+                }
+            }
+        }
+        else if ($argsNum == 1) {
+            throw new InvalidArgumentException("In case of one argument it should be string or array");
         }
         else if ($argsNum == 2 and is_string($arguments[0]) and is_array($arguments[1])) {
             $this->tokens[] = new StringStatement($arguments[0], $arguments[1]);

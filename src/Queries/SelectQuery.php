@@ -121,15 +121,9 @@ class SelectQuery
         return $this;
     }
 
-    public function limit(int $limit): SelectQuery
+    public function pagination(int $limit, int $offset): SelectQuery
     {
-        $this->selectQuery->limit($limit);
-        return $this;
-    }
-
-    public function offset(int $offset): SelectQuery
-    {
-        $this->selectQuery->offset($offset);
+        $this->selectQuery->pagination($limit, $offset);
         return $this;
     }
 

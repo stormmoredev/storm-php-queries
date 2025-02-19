@@ -31,12 +31,20 @@ final class UpdateTest extends TestCase
         $this->assertEquals('second-u', $item->name);
     }
 
-    public function testWithSet(): void
+    public function testUpdateBySetExpressionAndValues(): void
     {
         self::$queries->update('update_test', 'id = ?', 3)->setExpression('name = ?', '3')->execute();
         $item = self::$queries->select('*')->from('update_test')->where('id', 3)->find();
 
         $this->assertEquals('3', $item->name);
+    }
+
+    public function testUpdateBySetExpression(): void
+    {
+        self::$queries->update('products', 'product_id = ?', 10)->setExpression('price = price + 4')->execute();
+        $item = self::$queries->select('*')->from('products')->where('product_id', 10)->find();
+
+        $this->assertEquals(35, $item->price);
     }
 
     public static function setUpBeforeClass(): void

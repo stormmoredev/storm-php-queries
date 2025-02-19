@@ -6,30 +6,30 @@ use InvalidArgumentException;
 use Stormmore\Queries\Queries\SubQuery;
 use Stormmore\Queries\Sql\Clauses\ConditionalClause;
 use Stormmore\Queries\Sql\Clauses\JoinClause;
+use Stormmore\Queries\Sql\Clauses\LimitOffsetClause;
 use Stormmore\Queries\Sql\Clauses\OrderByClause;
 use Stormmore\Queries\Sql\Clauses\SelectClause;
 
 class SqlSelectBuilder
 {
-    private ?string $sqlDialect;
     private string $table = "";
     private SelectClause $selectClause;
     private JoinClause $joinClause;
     private ConditionalClause $whereClause;
     private ConditionalClause $havingClause;
     private OrderByClause $orderByClause;
+    private LimitOffsetClause $limitOffsetClause;
     private array $groupBy = [];
-    private ?int $limitRecords = null;
-    private ?int $offsetRecords = null;
+
 
     public function __construct(string $sqlDialect = null)
     {
-        $this->sqlDialect = $sqlDialect;
         $this->joinClause = new JoinClause();
         $this->whereClause = new ConditionalClause('WHERE');
         $this->havingClause = new ConditionalClause('HAVING');
         $this->orderByClause = new OrderByClause();
         $this->selectClause = new SelectClause();
+        $this->limitOffsetClause = new LimitOffsetClause($sqlDialect);
     }
 
     public function from(string $table): SqlSelectBuilder
@@ -110,21 +110,10 @@ class SqlSelectBuilder
         return $this;
     }
 
-    public function limit(int $limit): SqlSelectBuilder
+    public function pagination(int $limit, int $offset): SqlSelectBuilder
     {
-        $this->limitRecords = $limit;
+        $this->limitOffsetClause->setLimitOffset($limit, $offset);
         return $this;
-    }
-
-    public function offset(int $offset): SqlSelectBuilder
-    {
-        $this->offsetRecords = $offset;
-        return $this;
-    }
-
-    public function hasJoinedTables(): bool
-    {
-        return $this->joinClause->hasJoines();
     }
 
     public function toSql(): string
@@ -137,9 +126,7 @@ class SqlSelectBuilder
         $statement[] = $this->toGroupByClause();
         $statement[] = $this->havingClause->toString();
         $statement[] = $this->orderByClause->toString();
-        $statement[] = $this->toOffsetClause();
-        $statement[] = $this->toLimitClause();
-
+        $statement[] = $this->limitOffsetClause->toString();
 
         return implode("\n", array_filter($statement, function($element) { return !empty($element); }));
     }
@@ -165,35 +152,5 @@ class SqlSelectBuilder
                 $clause .= ' ' . $group;
         }
         return $clause;
-    }
-
-    private function toOffsetClause(): string
-    {
-        /*
-         * OFFSET  5 ROWS
-           FETCH NEXT 5 ROWS ONLY
-         */
-        if ($this->sqlDialect == "sqlsrv" and $this->offsetRecords === null and $this->limitRecords !== null) {
-            return "OFFSET 0 ROWS";
-        }
-
-        if ($this->offsetRecords !== null) {
-            if ($this->sqlDialect == "sqlsrv") {
-                return "OFFSET $this->offsetRecords ROWS";
-            }
-            return "OFFSET $this->offsetRecords";
-        }
-        return '';
-    }
-
-    private function toLimitClause(): string
-    {
-        if ($this->limitRecords !== null) {
-            if ($this->sqlDialect == "sqlsrv") {
-                return "FETCH NEXT {$this->limitRecords} ROWS ONLY";
-            }
-            return "LIMIT $this->limitRecords";
-        }
-        return '';
     }
 }

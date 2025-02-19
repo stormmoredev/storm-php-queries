@@ -8,44 +8,23 @@ use Stormmore\Queries\StormQueries;
 
 final class DeleteTest extends TestCase
 {
-    private static StormQueries $queries;
-
     public function testDelete(): void
     {
-        self::$queries
-            ->delete('delete_test')
-            ->where('id', 1)
-            ->execute();
+        $queries = ConnectionProvider::getStormQueries();
+        $queries->delete('delete_test', ['id' => 1]);
 
-        $count = self::$queries->from('delete_test')->count();
+        $count = $queries->from('delete_test')->count();
 
         $this->assertEquals(2, $count);
     }
 
-    public function testShortDelete(): void
+    public function testDeleteSqlWhere(): void
     {
-        self::$queries
-            ->delete('delete_test', 'id = ?', 2)
-            ->execute();
+        $queries = ConnectionProvider::getStormQueries();
+        $queries->delete('delete_test', 'id = ?', 2);
 
-        $count = self::$queries->from('delete_test')->count();
+        $count = $queries->from('delete_test')->count();
 
         $this->assertEquals(1, $count);
-    }
-
-    public function testDeleteArray(): void
-    {
-        self::$queries
-            ->delete('delete_test', ['id' => 3])
-            ->execute();
-
-        $count = self::$queries->from('delete_test')->count();
-
-        $this->assertEquals(0, $count);
-    }
-
-    public static function setUpBeforeClass(): void
-    {
-        self::$queries = ConnectionProvider::getStormQueries();
     }
 }

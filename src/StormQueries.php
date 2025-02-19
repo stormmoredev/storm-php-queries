@@ -69,7 +69,14 @@ readonly class StormQueries
         $query->execute();
     }
 
-    public function delete($table, string|array $where = '', ...$parameters): DeleteQuery
+    public function deleteQuery(string $table): DeleteQuery
+    {
+        $query = new DeleteQuery($this->connection);
+        $query->from($table);
+        return $query;
+    }
+
+    public function delete($table, string|array $where, mixed ...$parameters): void
     {
         $query = new DeleteQuery($this->connection);
         $query->from($table);
@@ -81,7 +88,7 @@ readonly class StormQueries
         if (is_string($where) and !empty($where)) {
             $query->whereString($where, $parameters);
         }
-        return $query;
+        $query->execute();
     }
 
     public function select(...$fields): SelectQuery

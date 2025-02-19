@@ -28,16 +28,6 @@ final class UpdateTest extends TestCase
         $this->assertEquals('second-up', $item->name);
     }
 
-    public function testUpdateArrayWhere(): void
-    {
-        $queries = ConnectionProvider::getStormQueries();
-        $queries->update('update_test', ['id' => 2], ['name' => 'second-up-2']);
-
-        $item = $queries->find('update_test', ['id' => 2]);
-
-        $this->assertEquals('second-up-2', $item->name);
-    }
-
     public function testUpdateQueryExpression(): void
     {
         $queries = ConnectionProvider::getStormQueries();

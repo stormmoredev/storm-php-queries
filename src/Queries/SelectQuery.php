@@ -36,7 +36,7 @@ class SelectQuery
         return $this;
     }
 
-    public function select(string ...$fields): SelectQuery
+    public function select(mixed ... $fields): SelectQuery
     {
         call_user_func_array([$this->selectQuery, 'select'], func_get_args());
         return $this;

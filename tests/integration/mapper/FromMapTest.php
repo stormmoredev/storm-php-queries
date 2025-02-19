@@ -16,7 +16,7 @@ class FromMapTest extends TestCase
 
     public function testMapSingleRecordWithPropertiesWithWhereOutsideFromClause(): void
     {
-        $customer = $this->queries->from('customers', Map::select([
+        $customer = $this->queries->select('customers', Map::select([
             'customer_id' => 'id',
             'customer_name' => 'name'
         ]))
@@ -28,7 +28,7 @@ class FromMapTest extends TestCase
 
     public function testMapRecordsSetWithPropertiesWithWhereOutsideFromClause(): void
     {
-        $customers = $this->queries->from('customers', Map::select([
+        $customers = $this->queries->select('customers', Map::select([
             'customer_id' => 'id',
             'customer_name' => 'name'
         ]))

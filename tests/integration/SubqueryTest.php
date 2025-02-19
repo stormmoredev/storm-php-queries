@@ -19,8 +19,8 @@ class SubqueryTest extends TestCase
             ->where("category_id", 1)
             ->where('price', '<=',
                 $this->queries
-                    ->selectQuery("avg(price)")
-                    ->from("products")
+                    ->select("products", "avg(price)")
+                    //->from("products")
                     ->where("category_id", 1)
             )
             ->findAll();

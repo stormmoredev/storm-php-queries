@@ -38,7 +38,7 @@ class SqlSelectBuilder
         return $this;
     }
 
-    public function select(string ...$fields): SqlSelectBuilder
+    public function select(mixed ...$fields): SqlSelectBuilder
     {
         $this->selectClause->add($fields);
         return $this;

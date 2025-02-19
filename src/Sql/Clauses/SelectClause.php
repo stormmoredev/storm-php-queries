@@ -13,9 +13,16 @@ class SelectClause
         $this->columns = [];
     }
 
-    public function add(array $columns): void
+    public function add(array $parameters): void
     {
-        $this->columns = array_merge($this->columns, $columns);
+        foreach($parameters as $parameter) {
+            if (is_string($parameter)) {
+                $this->columns[] = $parameter;
+            }
+            if (is_array($parameter)) {
+                $this->add($parameter);
+            }
+        }
     }
 
     public function toString(): string

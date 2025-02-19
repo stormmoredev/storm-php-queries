@@ -158,15 +158,19 @@ $queries->from('products', 'category_id = ?', 7)->avg('price');
  ```
 
 <a name="leftjoin"></a>
-### Left join 
+### Join/Left join 
 ```php
 $queries
     ->from('tableA')
     ->join('tableB', 'tableB.id', 'tableA.id')
-    ->leftJoin('tableC', 'tableC.id', 'tableA.id')
     ->find();
 ```
-
+```php
+$queries
+    ->from('tableA')
+    ->leftJoin('tableB', 'tableB.id', 'tableA.id')
+    ->find();
+```
 <a name="where"></a>
 ### Where 
 ```php
@@ -316,6 +320,7 @@ foreach($products as $product) {
 }
 ```
 
+#### One-to-many relationship
 #### One-to-many relationship
 ```php
 $queries
@@ -469,6 +474,10 @@ $queries->update('person')->where('id', 2)->setValues(['name' => 'Matthew'])->ex
 or
 ```php
 $queries->update('person', 'id = ?', 2, ['name' => 'Matthew'])->execute();
+```
+#### Using expression 
+```php
+$queries->update('products', 'id = ?', 2)->setExpression('price = price + 5');
 ```
 
 <a name="deletequery"></a>

@@ -1,6 +1,6 @@
 <?php
 
-namespace integration\mapper;
+namespace integration\orm;
 
 use data\ConnectionProvider;
 use data\models\Customer;

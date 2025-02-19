@@ -8,11 +8,11 @@ use Stormmore\Queries\StormQueries;
 
 class LimitOffsetTest extends TestCase
 {
-    private StormQueries $queries;
-
     public function testLimitOffset(): void
     {
-        $customers = $this->queries
+        $queries = ConnectionProvider::getStormQueries();
+
+        $customers = $queries
             ->select('customers')
             ->orderByAsc('customer_id')
             ->pagination(3, 5)
@@ -20,10 +20,5 @@ class LimitOffsetTest extends TestCase
 
         $this->assertCount(3, $customers);
         $this->assertEquals(6, $customers[0]->customer_id);
-    }
-
-    public function setUp(): void
-    {
-        $this->queries = ConnectionProvider::getStormQueries();
     }
 }

@@ -8,8 +8,6 @@ use Stormmore\Queries\StormQueries;
 
 final class WhereTest extends TestCase
 {
-    private static StormQueries $queries;
-
     public function testDefault(): void
     {
         $queries = ConnectionProvider::getStormQueries();

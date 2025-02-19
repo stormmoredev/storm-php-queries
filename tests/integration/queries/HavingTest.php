@@ -1,18 +1,17 @@
 <?php
 
-namespace integration\queries\select;
+namespace integration\queries;
 
 use data\ConnectionProvider;
 use PHPUnit\Framework\TestCase;
-use Stormmore\Queries\StormQueries;
 
 final class HavingTest extends TestCase
 {
-    private static StormQueries $queries;
-
     public function testHaving(): void
     {
-        $items = self::$queries
+        $queries = ConnectionProvider::getStormQueries();
+
+        $items = $queries
             ->select('customers', 'country, city, count(*)')
             ->groupBy('country, city')
             ->having('count(*)', '>', 1)
@@ -20,10 +19,5 @@ final class HavingTest extends TestCase
             ->findAll();
 
         $this->assertCount(7, $items);
-    }
-
-    public static function setUpBeforeClass(): void
-    {
-        self::$queries = ConnectionProvider::getStormQueries();
     }
 }

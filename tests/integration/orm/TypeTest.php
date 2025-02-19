@@ -1,6 +1,6 @@
 <?php
 
-namespace integration\mapper;
+namespace integration\orm;
 
 use data\ConnectionProvider;
 use data\models\mapperTypeTest\DetailWithoutProps;
@@ -27,8 +27,6 @@ use Stormmore\Queries\StormQueries;
 
 final class TypeTest extends TestCase
 {
-    private StormQueries $queries;
-
     public function testMappingToStdClass(): void
     {
         $order = $this->getOrder(stdClass::class, stdClass::class, stdClass::class, stdClass::class);

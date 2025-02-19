@@ -10,11 +10,11 @@ use Stormmore\Queries\StormQueries;
 
 final class TypesTest extends TestCase
 {
-    private static StormQueries $queries;
-
     public function testReadString(): void
     {
-        $item = self::$queries
+        $queries = ConnectionProvider::getStormQueries();
+
+        $item = $queries
             ->select('types_test')
             ->where('id', 1)
             ->find();
@@ -24,7 +24,9 @@ final class TypesTest extends TestCase
 
     public function testReadBoolWithTrueValue(): void
     {
-        $item = self::$queries
+        $queries = ConnectionProvider::getStormQueries();
+
+        $item = $queries
             ->select('types_test')
             ->where('id', 1)
             ->find();
@@ -34,7 +36,9 @@ final class TypesTest extends TestCase
 
     public function testReadBoolWithFalseValue(): void
     {
-        $item = self::$queries
+        $queries = ConnectionProvider::getStormQueries();
+
+        $item = $queries
             ->select('types_test')
             ->where('id', 1)
             ->find();
@@ -44,7 +48,9 @@ final class TypesTest extends TestCase
 
     public function testReadInteger(): void
     {
-        $item = self::$queries
+        $queries = ConnectionProvider::getStormQueries();
+
+        $item = $queries
             ->select('types_test')
             ->where('id', 2)
             ->find();
@@ -54,7 +60,9 @@ final class TypesTest extends TestCase
 
     public function testReadDecimal(): void
     {
-        $item = self::$queries
+        $queries = ConnectionProvider::getStormQueries();
+
+        $item = $queries
             ->select('types_test')
             ->where('id', 2)
             ->find();
@@ -64,7 +72,9 @@ final class TypesTest extends TestCase
 
     public function testReadDate(): void
     {
-        $item = self::$queries
+        $queries = ConnectionProvider::getStormQueries();
+
+        $item = $queries
             ->select('types_test')
             ->where('id', 2)
             ->find();
@@ -74,7 +84,9 @@ final class TypesTest extends TestCase
 
     public function testReadDateTime(): void
     {
-        $item = self::$queries
+        $queries = ConnectionProvider::getStormQueries();
+
+        $item = $queries
             ->select('types_test', '*')
             ->where('id', 2)
             ->find();
@@ -84,7 +96,9 @@ final class TypesTest extends TestCase
 
     public function testReadUid(): void
     {
-        $item = self::$queries
+        $queries = ConnectionProvider::getStormQueries();
+
+        $item = $queries
             ->select('types_test')
             ->where('id', 2)
             ->find();
@@ -94,71 +108,73 @@ final class TypesTest extends TestCase
 
     public function testWriteReadBoolWithTrueValue(): void
     {
-        $id = self::$queries->insert('types_test', ['name' => 'third', 'is_set' => true]);
+        $queries = ConnectionProvider::getStormQueries();
 
-        $item = self::$queries->find('types_test', ['id' => $id]);
+        $id = $queries->insert('types_test', ['name' => 'third', 'is_set' => true]);
+        $item = $queries->find('types_test', ['id' => $id]);
 
         $this->assertEquals(true, $item->is_set);
     }
 
     public function testWriteReadBoolWithFalseValue(): void
     {
-        $id = self::$queries->insert('types_test', ['name' => 'fourth', 'is_set' => false]);
+        $queries = ConnectionProvider::getStormQueries();
 
-        $item = self::$queries->find('types_test', ['id' => $id]);
+        $id = $queries->insert('types_test', ['name' => 'fourth', 'is_set' => false]);
+        $item = $queries->find('types_test', ['id' => $id]);
 
         $this->assertEquals(false, $item->is_set);
     }
 
     public function testWriteReadInt(): void
     {
-        $id = self::$queries->insert('types_test', ['name' => 'fifth', 'num' => 7]);
+        $queries = ConnectionProvider::getStormQueries();
 
-        $item = self::$queries->find('types_test', ['id' => $id]);
+        $id = $queries->insert('types_test', ['name' => 'fifth', 'num' => 7]);
+        $item = $queries->find('types_test', ['id' => $id]);
 
         $this->assertEquals(7, $item->num);
     }
 
     public function testWriteReadDecimal(): void
     {
-        $id = self::$queries->insert('types_test', ['name' => 'sixth', 'num_f' => 7.7]);
+        $queries = ConnectionProvider::getStormQueries();
 
-        $item = self::$queries->find('types_test', ['id' => $id]);
+        $id = $queries->insert('types_test', ['name' => 'sixth', 'num_f' => 7.7]);
+        $item = $queries->find('types_test', ['id' => $id]);
 
         $this->assertEquals(7.7, $item->num_f);
     }
 
     public function testWriteReadDate(): void
     {
+        $queries = ConnectionProvider::getStormQueries();
         $date = new DateTime("2020-02-02");
-        $id = self::$queries->insert('types_test', ['name' => 'seventh', 'date' => $date]);
 
-        $item = self::$queries->find('types_test', ['id' => $id]);
+        $id = $queries->insert('types_test', ['name' => 'seventh', 'date' => $date]);
+        $item = $queries->find('types_test', ['id' => $id]);
 
         $this->assertEquals(new DateTime("2020-02-02"), new DateTime($item->date));
     }
 
     public function testWriteReadDateTime(): void
     {
+        $queries = ConnectionProvider::getStormQueries();
         $date = new DateTime("2020-02-02 10:00:00", new DateTimeZone("Etc/GMT+1"));
-        $id = self::$queries->insert('types_test', ['name' => 'eighth', 'datetime' => $date]);
 
-        $item = self::$queries->find('types_test', ['id' => $id]);
+        $id = $queries->insert('types_test', ['name' => 'eighth', 'datetime' => $date]);
+        $item = $queries->find('types_test', ['id' => $id]);
 
         $this->assertEquals(new DateTime("2020-02-02 11:00:00"), new DateTime($item->datetime));
     }
 
     public function testWriteReadUid(): void
     {
-        $id = self::$queries->insert('types_test', ['name' => 'ninth', 'uid' => '0f7ef9b1-b809-4678-a418-18218cfa75d7']);
+        $queries = ConnectionProvider::getStormQueries();
 
-        $item = self::$queries->find('types_test', ['id' => $id]);
+        $id = $queries->insert('types_test', ['name' => 'ninth', 'uid' => '0f7ef9b1-b809-4678-a418-18218cfa75d7']);
+        $item = $queries->find('types_test', ['id' => $id]);
 
         $this->assertEquals('0f7ef9b1-b809-4678-a418-18218cfa75d7', strtolower($item->uid));
-    }
-
-    public static function setUpBeforeClass(): void
-    {
-        self::$queries = ConnectionProvider::getStormQueries();
     }
 }

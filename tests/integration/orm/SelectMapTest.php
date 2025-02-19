@@ -1,6 +1,6 @@
 <?php
 
-namespace integration\mapper;
+namespace integration\orm;
 
 use data\ConnectionProvider;
 use data\models\Customer;
@@ -10,13 +10,13 @@ use stdClass;
 use Stormmore\Queries\Mapper\Map;
 use Stormmore\Queries\StormQueries;
 
-class FromMapTest extends TestCase
+class SelectMapTest extends TestCase
  {
-    private StormQueries $queries;
-
-    public function testMapSingleRecordWithPropertiesWithWhereOutsideFromClause(): void
+    public function testMapFind(): void
     {
-        $customer = $this->queries->select('customers', Map::select([
+        $queries = ConnectionProvider::getStormQueries();
+
+        $customer = $queries->select('customers', Map::select([
             'customer_id' => 'id',
             'customer_name' => 'name'
         ]))
@@ -26,9 +26,11 @@ class FromMapTest extends TestCase
         $this->assertEquals([7, "Blondel père et fils"], [$customer->id, $customer->name]);
     }
 
-    public function testMapRecordsSetWithPropertiesWithWhereOutsideFromClause(): void
+    public function testMapFindAll(): void
     {
-        $customers = $this->queries->select('customers', Map::select([
+        $queries = ConnectionProvider::getStormQueries();
+
+        $customers = $queries->select('customers', Map::select([
             'customer_id' => 'id',
             'customer_name' => 'name'
         ]))
@@ -37,10 +39,5 @@ class FromMapTest extends TestCase
 
         $this->assertCount(7, $customers);
         $this->assertEquals([7, "Blondel père et fils"], [$customers[6]->id, $customers[6]->name]);
-    }
-
-    public function setUp(): void
-    {
-        $this->queries = ConnectionProvider::getStormQueries();
     }
 }

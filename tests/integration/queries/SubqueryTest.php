@@ -1,24 +1,23 @@
 <?php
 
-namespace integration;
+namespace integration\queries;
 
 use data\ConnectionProvider;
 use PHPUnit\Framework\TestCase;
 use Stormmore\Queries\Mapper\Map;
 use Stormmore\Queries\Queries\SubQuery;
-use Stormmore\Queries\StormQueries;
 
 class SubqueryTest extends TestCase
 {
-    private StormQueries $queries;
-
     public function testWhereSubquery(): void
     {
-        $items = $this->queries
+        $queries = ConnectionProvider::getStormQueries();
+
+        $items = $queries
             ->select("products")
             ->where("category_id", 1)
             ->where('price', '<=',
-                $this->queries
+                $queries
                     ->select("products", "avg(price)")
                     ->where("category_id", 1)
             )
@@ -29,8 +28,10 @@ class SubqueryTest extends TestCase
 
     public function testFromSubquery(): void
     {
-        $items = $this->queries
-            ->select(SubQuery::create($this->queries->select('products'), 'p'))
+        $queries = ConnectionProvider::getStormQueries();
+
+        $items = $queries
+            ->select(SubQuery::create($queries->select('products'), 'p'))
             ->orderByAsc('p.product_id')
             ->findAll();
 
@@ -41,8 +42,10 @@ class SubqueryTest extends TestCase
 
     public function testFromSubqueryWithJoin(): void
     {
-        $items = $this->queries
-            ->select(SubQuery::create($this->queries->select('products'), 'p'))
+        $queries = ConnectionProvider::getStormQueries();
+
+        $items = $queries
+            ->select(SubQuery::create($queries->select('products'), 'p'))
             ->leftJoin('suppliers s', 's.supplier_id = p.supplier_id')
             ->orderByAsc('p.product_id')
             ->findAll();
@@ -56,9 +59,11 @@ class SubqueryTest extends TestCase
 
     public function testFromSubqueryWithSubqueryJoin(): void
     {
-        $items = $this->queries
-            ->select(SubQuery::create($this->queries->select('products'), 'p'))
-            ->leftJoin(SubQuery::create($this->queries->select('suppliers'), 's'), 's.supplier_id = p.supplier_id')
+        $queries = ConnectionProvider::getStormQueries();
+
+        $items = $queries
+            ->select(SubQuery::create($queries->select('products'), 'p'))
+            ->leftJoin(SubQuery::create($queries->select('suppliers'), 's'), 's.supplier_id = p.supplier_id')
             ->orderByAsc('p.product_id')
             ->findAll();
 
@@ -71,9 +76,11 @@ class SubqueryTest extends TestCase
 
     public function testFromWithSubqueryJoin(): void
     {
-        $items = $this->queries
+        $queries = ConnectionProvider::getStormQueries();
+
+        $items = $queries
             ->select('products p')
-            ->leftJoin(SubQuery::create($this->queries->select('suppliers'), 's'), 's.supplier_id = p.supplier_id')
+            ->leftJoin(SubQuery::create($queries->select('suppliers'), 's'), 's.supplier_id = p.supplier_id')
             ->orderByAsc('p.product_id')
             ->findAll();
 
@@ -86,8 +93,10 @@ class SubqueryTest extends TestCase
 
     public function testFromSubqueryWithMap(): void
     {
-        $items = $this->queries
-            ->select(SubQuery::create($this->queries->select('products'), 'p'), Map::select([
+        $queries = ConnectionProvider::getStormQueries();
+
+        $items = $queries
+            ->select(SubQuery::create($queries->select('products'), 'p'), Map::select([
                 'product_id' => 'id',
                 'product_name' => 'name'
             ]))
@@ -99,8 +108,10 @@ class SubqueryTest extends TestCase
 
     public function testLeftJoinSubqueryWithMap(): void
     {
-        $items = $this->queries
-            ->select(SubQuery::create($this->queries->select('orders'), 'o'), Map::select([
+        $queries = ConnectionProvider::getStormQueries();
+
+        $items = $queries
+            ->select(SubQuery::create($queries->select('orders'), 'o'), Map::select([
                 'order_id' => 'id',
                 'order_date' => 'date'
             ]))
@@ -123,12 +134,14 @@ class SubqueryTest extends TestCase
 
     public function testFromSubqueryWithSubqueryJoinAndMap(): void
     {
-        $items = $this->queries
-            ->select(SubQuery::create($this->queries->select('orders'), 'o'), Map::select([
+        $queries = ConnectionProvider::getStormQueries();
+
+        $items = $queries
+            ->select(SubQuery::create($queries->select('orders'), 'o'), Map::select([
                 'order_id' => 'id',
                 'order_date' => 'date'
             ]))
-            ->leftJoin(SubQuery::create($this->queries->select('order_details'), 'od'), 'od.order_id = o.order_id', Map::many('details', [
+            ->leftJoin(SubQuery::create($queries->select('order_details'), 'od'), 'od.order_id = o.order_id', Map::many('details', [
                 'order_detail_id' => 'id',
                 'quantity' => 'quantity'
             ]))
@@ -143,10 +156,5 @@ class SubqueryTest extends TestCase
         $this->assertCount(2, $order->details);
         $this->assertEquals(49, $order->details[0]->quantity);
         $this->assertEquals(16, $order->details[1]->quantity);
-    }
-
-    public function setUp(): void
-    {
-        $this->queries = ConnectionProvider::getStormQueries();
     }
 }

@@ -21,7 +21,7 @@ class UpdateQuery
         return $this;
     }
 
-    public function setExpression(string $expression, mixed ...$values): UpdateQuery
+    public function set(string $expression, mixed ...$values): UpdateQuery
     {
         $normalized = ParameterNormalizer::normalize($values);
         $this->updateBuilder->setExpression($expression, $normalized);

@@ -43,7 +43,7 @@ final class UpdateTest extends TestCase
         $queries = ConnectionProvider::getStormQueries();
         $queries->updateQuery('update_test')
             ->where('id', 3)
-            ->setExpression('name = ?', '3')
+            ->set('name = ?', '3')
             ->execute();
 
         $item = $queries->find('update_test', ['id' => 3]);
@@ -56,10 +56,10 @@ final class UpdateTest extends TestCase
         $queries = ConnectionProvider::getStormQueries();
         $queries->updateQuery('products')
             ->where('product_id', 10)
-            ->setExpression('price = price + 4')
+            ->set('price = price + 4')
             ->execute();
 
-        $item = $queries->find('products',['product_id' => 10]);
+        $item = $queries->find('products', ['product_id' => 10]);
 
         $this->assertEquals(35, $item->price);
     }

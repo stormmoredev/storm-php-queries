@@ -19,13 +19,24 @@ final class DeleteTest extends TestCase
 
         $count = self::$queries->from('delete_test')->count();
 
-        $this->assertEquals(1, $count);
+        $this->assertEquals(2, $count);
     }
 
     public function testShortDelete(): void
     {
         self::$queries
             ->delete('delete_test', 'id = ?', 2)
+            ->execute();
+
+        $count = self::$queries->from('delete_test')->count();
+
+        $this->assertEquals(1, $count);
+    }
+
+    public function testDeleteArray(): void
+    {
+        self::$queries
+            ->delete('delete_test', ['id' => 3])
             ->execute();
 
         $count = self::$queries->from('delete_test')->count();

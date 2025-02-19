@@ -102,16 +102,16 @@ final class TypesTest extends TestCase
 
     public function testWriteReadBoolWithTrueValue(): void
     {
-        $id = self::$queries->insert('types_test', ['name' => 'third', 'is_set' => true])->execute();
+        $id = self::$queries->insert('types_test', ['name' => 'third', 'is_set' => true]);
 
-        $item = self::$queries->select('*')->from('types_test')->where('id', $id)->find();
+        $item = self::$queries->find('types_test', ['id' => $id]);
 
         $this->assertEquals(true, $item->is_set);
     }
 
     public function testWriteReadBoolWithFalseValue(): void
     {
-        $id = self::$queries->insert('types_test', ['name' => 'fourth', 'is_set' => false])->execute();
+        $id = self::$queries->insert('types_test', ['name' => 'fourth', 'is_set' => false]);
 
         $item = self::$queries->select('*')->from('types_test')->where('id', $id)->find();
 
@@ -120,7 +120,7 @@ final class TypesTest extends TestCase
 
     public function testWriteReadInt(): void
     {
-        $id = self::$queries->insert('types_test', ['name' => 'fifth', 'num' => 7])->execute();
+        $id = self::$queries->insert('types_test', ['name' => 'fifth', 'num' => 7]);
 
         $item = self::$queries->select('*')->from('types_test')->where('id', $id)->find();
 
@@ -129,7 +129,7 @@ final class TypesTest extends TestCase
 
     public function testWriteReadDecimal(): void
     {
-        $id = self::$queries->insert('types_test', ['name' => 'sixth', 'num_f' => 7.7])->execute();
+        $id = self::$queries->insert('types_test', ['name' => 'sixth', 'num_f' => 7.7]);
 
         $item = self::$queries->select('*')->from('types_test')->where('id', $id)->find();
 
@@ -139,7 +139,7 @@ final class TypesTest extends TestCase
     public function testWriteReadDate(): void
     {
         $date = new DateTime("2020-02-02");
-        $id = self::$queries->insert('types_test', ['name' => 'seventh', 'date' => $date])->execute();
+        $id = self::$queries->insert('types_test', ['name' => 'seventh', 'date' => $date]);
 
         $item = self::$queries->select('*')->from('types_test')->where('id', $id)->find();
 
@@ -149,7 +149,7 @@ final class TypesTest extends TestCase
     public function testWriteReadDateTime(): void
     {
         $date = new DateTime("2020-02-02 10:00:00", new DateTimeZone("Etc/GMT+1"));
-        $id = self::$queries->insert('types_test', ['name' => 'eighth', 'datetime' => $date])->execute();
+        $id = self::$queries->insert('types_test', ['name' => 'eighth', 'datetime' => $date]);
 
         $item = self::$queries->select('*')->from('types_test')->where('id', $id)->find();
 
@@ -158,7 +158,7 @@ final class TypesTest extends TestCase
 
     public function testWriteReadUid(): void
     {
-        $id = self::$queries->insert('types_test', ['name' => 'ninth', 'uid' => '0f7ef9b1-b809-4678-a418-18218cfa75d7'])->execute();
+        $id = self::$queries->insert('types_test', ['name' => 'ninth', 'uid' => '0f7ef9b1-b809-4678-a418-18218cfa75d7']);
 
         $item = self::$queries->select('*')->from('types_test')->where('id', $id)->find();
 

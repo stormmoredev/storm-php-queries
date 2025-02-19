@@ -15,22 +15,73 @@ readonly class StormQueries
     {
     }
 
-    public function insert($table, $record = array()): InsertQuery
+    public function insertQuery(string $table):InsertQuery
     {
         $query = new InsertQuery($this->connection);
         $query->into($table);
-        if (count($record)) {
-            $query->setRecord($record);
-        }
         return $query;
     }
 
-    public function insertMany($table, $records = array()): InsertQuery
+    public function insert($table, array $record): int
+    {
+        $query = new InsertQuery($this->connection);
+        $query->into($table);
+        $query->setRecord($record);
+        return $query->execute();
+    }
+
+    public function insertMany($table, $records = array()): void
     {
         $insertQuery = new InsertQuery($this->connection);
         $insertQuery->into($table);
         $insertQuery->setRecords($records);
-        return $insertQuery;
+        $insertQuery->execute();
+    }
+
+    public function updateQuery(string $table): UpdateQuery
+    {
+        $query = new UpdateQuery($this->connection);
+        $query->update($table);
+        return $query;
+    }
+
+    public function update($table, string|array $where = '', mixed ... $parameters): void
+    {
+        $query = new UpdateQuery($this->connection);
+        $query->update($table);
+
+        $values = array();
+        if (count($parameters) and is_array(end($parameters))) {
+            $values = array_pop($parameters);
+        }
+        if (is_array($where) and count($where)) {
+            foreach($where as $field => $value) {
+                $query->where($field, $value);
+            }
+        }
+        if (is_string($where) and !empty($where)) {
+            $query->where($where, $parameters);
+        }
+        if (count($values)) {
+            $query->setValues($values);
+        }
+
+        $query->execute();
+    }
+
+    public function delete($table, string|array $where = '', ...$parameters): DeleteQuery
+    {
+        $query = new DeleteQuery($this->connection);
+        $query->from($table);
+        if (is_array($where) and count($where)) {
+            foreach ($where as $field => $value) {
+                $query->where($field, $value);
+            }
+        }
+        if (is_string($where) and !empty($where)) {
+            $query->whereString($where, $parameters);
+        }
+        return $query;
     }
 
     public function select(...$fields): SelectQuery
@@ -62,67 +113,52 @@ readonly class StormQueries
         return $selectQuery;
     }
 
-    public function update($table, string $where = '', mixed ... $parameters): UpdateQuery
+    public function find(string $table, string|array $where, mixed ... $parameters): ?object
     {
-        $query = new UpdateQuery($this->connection);
-        $query->update($table);
-
-        if (!empty($where)) {
-            $values = array();
-            if (count($parameters) and is_array($parameters[count($parameters) - 1])) {
-                $values = array_pop($parameters);
-            }
-            $query->where($where, $parameters);
-            if (count($values)) {
-                $query->setValues($values);
-            }
-        }
-
-        return $query;
+        return $this->getBasicFindQuery("*", $table, $where, $parameters)->find();
     }
 
-    public function delete($table, string $where = '', ...$parameters): DeleteQuery
+    public function findAll(string $table, string|array $where, mixed ... $parameters): array
     {
-        $query = new DeleteQuery($this->connection);
-        $query->from($table);
-        if (!empty($where)) {
-            $query->whereString($where, $parameters);
-        }
-        return $query;
+        return $this->getBasicFindQuery("*", $table, $where, $parameters)->findAll();
     }
 
-    public function find(string $table, string $where, mixed ... $parameters): ?object
-    {
-        return $this->createSelectQuery($table, $where, $parameters)->find();
-    }
-
-    public function findAll(string $table, string $where, mixed ... $parameters): array
-    {
-        return $this->createSelectQuery($table, $where, $parameters)->findAll();
-    }
-
-    public function exist(string $table, string $where, mixed ...$parameters): bool
-    {
-        $query = new SelectQuery($this->connection);
-        $query->select('1');
-        $query->from($table);
-        if ($where) {
-            $query->whereString($where, $parameters);
-        }
-        $item = $query->find();
-        return $item != null;
-    }
-
-    private function createSelectQuery(string $table, string $where, array $parameters): SelectQuery
+    private function getBasicFindQuery(string $select, string $table, string|array $where, array $parameters): SelectQuery
     {
         $map = null;
         if (count($parameters) and $parameters[count($parameters) - 1] instanceof Map) {
             $map = array_pop($parameters);
         }
         $selectQuery = new SelectQuery($this->connection);
-        $selectQuery->select('*');
+        $selectQuery->select($select);
         $selectQuery->from($table, $map);
-        $selectQuery->whereString($where, $parameters);
+        if(is_array($where)) {
+            foreach($where as $field => $value) {
+                $selectQuery->where($field, $value);
+            }
+        }
+        if(is_string($where)) {
+            $selectQuery->whereString($where, $parameters);
+        }
         return $selectQuery;
     }
+
+    public function exist(string $table, string|array $where, mixed ...$parameters): bool
+    {
+        $query = new SelectQuery($this->connection);
+        $query->select('1');
+        $query->from($table);
+        if(is_array($where)) {
+            foreach($where as $field => $value) {
+                $query->where($field, $value);
+            }
+        }
+        if(is_string($where)) {
+            $query->whereString($where, $parameters);
+        }
+        $item = $query->find();
+        return $item != null;
+    }
+
+
 }

@@ -28,9 +28,6 @@ CREATE TABLE types_test
     datetime timestamp null
 );
 
-INSERT INTO update_test (name) VALUES ('first'), ('second'), ('third');
-INSERT INTO delete_test (name) VALUES ('first'), ('second');
-
 INSERT INTO types_test (uid, name, num, num_f, is_set, date, datetime) VALUES ('c3a5d2f8-471d-47bc-a56c-6f73d61215b9', 'first',1, 1.11, true, '2021-01-01', '2021-01-01 12:13:14');
 INSERT INTO types_test (uid, name, num, num_f, is_set, date, datetime) VALUES ('3f333df6-90a4-4fda-8dd3-9485d27cee36', 'second',2, 2.22, false, '2022-02-02', '2022-02-02 12:13:14');
 

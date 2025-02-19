@@ -8,41 +8,28 @@ use Stormmore\Queries\StormQueries;
 
 final class InsertTest extends TestCase
 {
-    private static StormQueries $queries;
+    private StormQueries $queries;
 
     public function testInsert(): void
     {
-        $query = self::$queries
-            ->insert('insert_test')
-            ->setRecord([
-                'name' => 'first'
-            ]);
+        $id = $this->queries->insert('insert_test', ['name' => 'first']);
 
-        $query->execute();
-
-        $this->assertEquals(1, $query->getLastInsertedId());
-    }
-
-    public function testInsertWithOneInvoke(): void
-    {
-        $id = self::$queries->insert('insert_test', ['name' => 'second'])->execute();
-
-        $this->assertEquals(2, $id);
+        $this->assertEquals(1, $id);
     }
 
     public function testInsertMany(): void
     {
-        self::$queries->insertMany('insert_test', [
+        $this->queries->insertMany('insert_test', [
             ['name' => 'name1'],
             ['name' => 'name2'],
             ['name' => 'name3']
-        ])->execute();
+        ]);
 
-        $this->assertEquals(5, self::$queries->from('insert_test')->count());
+        $this->assertEquals(4, $this->queries->from('insert_test')->count());
     }
 
-    public static function setUpBeforeClass(): void
+    public function setUp(): void
     {
-        self::$queries = ConnectionProvider::getStormQueries();
+        $this->queries = ConnectionProvider::getStormQueries();
     }
 }

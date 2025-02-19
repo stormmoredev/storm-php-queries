@@ -26,19 +26,18 @@ have possibility to build queries easily and retrieve in hierarchical way.
   * [OrderBy](#orderby)
   * [GroupBy](#groupby)
   * [Having](#having)
-* [3. Quick find queries](#quickfindqueries)
-* [4. ORM](#orm)
-* [5. Sub queries](#subquery)
-* [6. Assembling query](#assemblingquery)
-* [7. Insert query](#insertquery)
-* [8. Update query](#updatequery)
-* [9. Delete query](#deletequery)
-* [10. Profiling nad logging queries](#profiling)
-* [11. Notice](#notice)
-* [12. Tests](#tests)
-* [13. Examples](#examples)
-* [14. Author](#author)
-* [15. License ](#license)
+* [3. ORM](#orm)
+* [4. Sub queries](#subquery)
+* [5. Assembling query](#assemblingquery)
+* [6. Insert query](#insertquery)
+* [7. Update query](#updatequery)
+* [8. Delete query](#deletequery)
+* [9. Profiling nad logging queries](#profiling)
+* [10. Notice](#notice)
+* [11. Tests](#tests)
+* [12. Examples](#examples)
+* [13. Author](#author)
+* [14. License ](#license)
 
 <a name="quickstart"></a>
 ## Quick start
@@ -60,6 +59,57 @@ use Stormmore\Queries\StormQueries;
 
 $connection = ConnectionFactory::createFromstring("dsn", "user", "password");
 $queries = new StormQueries($connection);
+```
+### Basic queries
+Finding product by id
+```php
+$product = $queries->find('products', 'id = ?', 5);
+//or
+$product = $queries->find('products', ['id' => 5]);
+```
+Finding all products in category
+```php
+$products = $queries->findAll('products', 'category_id = ?', 10);
+//or
+$products = $queries->findAll('products', ['category_id' => 10]);
+```
+
+Inserting product
+```php
+$query->insert('products', ['name' => 'Golden socks', 'price' => 777])->execute();
+```
+Updating product
+```php
+$queries->update('products', 'id = ?', 5, ['name' => 'Renamed product'])->execute();
+//or
+$queries->update('products', ['id' => 5], ['name' => 'Renamed product'])->execute();
+```
+
+Deleting product
+```php
+$queries->delete('products', 'id = ?', 5)->execute();
+//or
+$queries->delete('products', ['id' => 5])->execute();
+```
+
+Check if product exists
+```php
+$exists = $queries->exist('products', 'id = ?', 5);
+//or
+$exists = $queries->exist('products', ['id' => 5]);
+```
+
+Mapping records to user class
+```php
+$product = $queries->find('products', 'id = ?', 5, Map::select([
+    'product_id' => 'id', 
+    'product_name' => 'name'
+], UserProduct::class));
+//or
+$product = $queries->find('products', ['id' => 5], Map::select([
+  'product_id' => 'id', 
+  'product_name' => 'name'
+], UserProduct::class));
 ```
 
 ### Full working example
@@ -321,7 +371,6 @@ foreach($products as $product) {
 ```
 
 #### One-to-many relationship
-#### One-to-many relationship
 ```php
 $queries
   ->from('customers c',  Map::select([
@@ -346,41 +395,6 @@ $queries
   ]))
   ->where('p.product_id', 'in', [1,2,3,4])
   ->findAll();
-```
-
-<a name="quickfindqueries"></a>
-## Quick find queries
-
-### find one
-
-```php
-$customer = $queries->find('customers', 'customer_id = ?', 7);
-```
-
-### find one with map
-```php
-$customer = $queries->find('customers', 'customer_id = ?', 7, Map::select([
-    'customer_id' => 'id',
-    'customer_name' => 'name'
-]));
-```
-
-### find all 
-```php
-$customers = $queries->findAll('customers', 'country = ? and customer_name LIKE ?', 'France', '%La%');
-```
-
-### find all with map
-```php
-$customers = $queries->findAll('customers', 'country = ? and customer_name LIKE ?', 'France', '%La%', Map::select([
-    'customer_id' => 'id',
-    'customer_name' => 'name'
-]));
-```
-
-### exists
-```php
-$exist = $queries->exists('customers', 'email = ?', 'john@doe.com');
 ```
 
 <a name="subquery"></a>
@@ -475,9 +489,9 @@ or
 ```php
 $queries->update('person', 'id = ?', 2, ['name' => 'Matthew'])->execute();
 ```
-#### Using expression 
+or 
 ```php
-$queries->update('products', 'id = ?', 2)->setExpression('price = price + 5');
+$queries->update('products', 'id = ?', 2)->setExpression('price = price + 5')->execute()
 ```
 
 <a name="deletequery"></a>
@@ -488,6 +502,10 @@ $queries->delete('person')->where('id', 1)->execute();
 or
 ```php
 $queries->delete('person', 'id = ?', 1)->execute();
+```
+or
+```php
+$queries->delete('person', ['id' => 1])->execute();
 ```
 
 <a name="profiling"></a>

@@ -8,47 +8,59 @@ use Stormmore\Queries\StormQueries;
 
 final class UpdateTest extends TestCase
 {
-    private static StormQueries $queries;
-
     public function testUpdate(): void
     {
-        self::$queries
-            ->update('update_test')
-            ->where('id', 1)
-            ->setValues(array('name' => 'first-u'))
+        $queries = ConnectionProvider::getStormQueries();
+        $queries->update('update_test', ['id' => 1], ['name' => 'first-up']);
+
+        $item = $queries->find('update_test', ['id' => 1]);
+
+        $this->assertEquals('first-up', $item->name);
+    }
+
+    public function testUpdateSqlWhere(): void
+    {
+        $queries = ConnectionProvider::getStormQueries();
+        $queries->update('update_test', 'id = ?', 2, ['name' => 'second-up']);
+
+        $item = $queries->find('update_test', ['id' => 2]);
+
+        $this->assertEquals('second-up', $item->name);
+    }
+
+    public function testUpdateArrayWhere(): void
+    {
+        $queries = ConnectionProvider::getStormQueries();
+        $queries->update('update_test', ['id' => 2], ['name' => 'second-up-2']);
+
+        $item = $queries->find('update_test', ['id' => 2]);
+
+        $this->assertEquals('second-up-2', $item->name);
+    }
+
+    public function testUpdateQueryExpression(): void
+    {
+        $queries = ConnectionProvider::getStormQueries();
+        $queries->updateQuery('update_test')
+            ->where('id', 3)
+            ->setExpression('name = ?', '3')
             ->execute();
-        $item = self::$queries->select('*')->from('update_test')->where('id', 1)->find();
 
-        $this->assertEquals('first-u', $item->name);
-    }
-
-    public function testQuickUpdate(): void
-    {
-        self::$queries->update('update_test', 'id = ?', 2, ['name' => 'second-u'])->execute();
-
-        $item = self::$queries->select('*')->from('update_test')->where('id', 2)->find();
-
-        $this->assertEquals('second-u', $item->name);
-    }
-
-    public function testUpdateBySetExpressionAndValues(): void
-    {
-        self::$queries->update('update_test', 'id = ?', 3)->setExpression('name = ?', '3')->execute();
-        $item = self::$queries->select('*')->from('update_test')->where('id', 3)->find();
+        $item = $queries->find('update_test', ['id' => 3]);
 
         $this->assertEquals('3', $item->name);
     }
 
     public function testUpdateBySetExpression(): void
     {
-        self::$queries->update('products', 'product_id = ?', 10)->setExpression('price = price + 4')->execute();
-        $item = self::$queries->select('*')->from('products')->where('product_id', 10)->find();
+        $queries = ConnectionProvider::getStormQueries();
+        $queries->updateQuery('products')
+            ->where('product_id', 10)
+            ->setExpression('price = price + 4')
+            ->execute();
+
+        $item = $queries->find('products',['product_id' => 10]);
 
         $this->assertEquals(35, $item->price);
-    }
-
-    public static function setUpBeforeClass(): void
-    {
-        self::$queries = ConnectionProvider::getStormQueries();
     }
 }

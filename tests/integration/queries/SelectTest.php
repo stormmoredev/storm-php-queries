@@ -32,35 +32,35 @@ final class SelectTest extends TestCase
 
     public function testMinFunction(): void
     {
-        $max = self::$queries->from('products')->min('price');
+        $max = self::$queries->select('products')->min('price');
 
         $this->assertEquals(2.50, $max);
     }
 
     public function testMaxFunction(): void
     {
-        $max = self::$queries->from('products')->max('price');
+        $max = self::$queries->select('products')->max('price');
 
         $this->assertEquals(263.50, $max);
     }
 
     public function testCountFunction(): void
     {
-        $count = self::$queries->from('products')->count();
+        $count = self::$queries->select('products')->count();
 
         $this->assertEquals(77, $count);
     }
 
     public function testSumFunction(): void
     {
-        $count = self::$queries->from('products')->sum('price');
+        $count = self::$queries->select('products')->sum('price');
 
         $this->assertEquals(2222.71, $count);
     }
 
     public function testAvgFunction(): void
     {
-        $avg = self::$queries->from('products')->avg('price');
+        $avg = self::$queries->select('products')->avg('price');
 
         $this->assertEquals(28.86636, round($avg, 5));
     }

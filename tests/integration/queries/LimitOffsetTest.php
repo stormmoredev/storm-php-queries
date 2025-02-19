@@ -13,7 +13,7 @@ class LimitOffsetTest extends TestCase
     public function testLimitOffset(): void
     {
         $customers = $this->queries
-            ->from('customers')
+            ->select('customers')
             ->orderByAsc('customer_id')
             ->pagination(3, 5)
             ->findAll();

@@ -91,14 +91,6 @@ readonly class StormQueries
         $query->execute();
     }
     
-    public function from(string|SubQuery $set, Map $map = null): SelectQuery
-    {
-        $selectQuery = new SelectQuery($this->connection);
-        $selectQuery->select('*');
-        $selectQuery->from($set, $map);
-        return $selectQuery;
-    }
-
     public function select(string|SubQuery $table, mixed ...$parameters): SelectQuery
     {
         $map = null;

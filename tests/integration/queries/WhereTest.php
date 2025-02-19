@@ -12,8 +12,10 @@ final class WhereTest extends TestCase
 
     public function testDefault(): void
     {
-        $items = self::$queries
-            ->from('customers')
+        $queries = ConnectionProvider::getStormQueries();
+
+        $items = $queries
+            ->select('customers')
             ->where('customer_id', 77)
             ->findAll();
 
@@ -22,8 +24,10 @@ final class WhereTest extends TestCase
 
     public function testEqual(): void
     {
-        $items = self::$queries
-            ->from('customers')
+        $queries = ConnectionProvider::getStormQueries();
+
+        $items = $queries
+            ->select('customers')
             ->where('customer_id', '=', 77)
             ->findAll();
 
@@ -32,8 +36,10 @@ final class WhereTest extends TestCase
 
     public function testWhereWithNotEqual(): void
     {
-        $items = self::$queries
-            ->from('customers')
+        $queries = ConnectionProvider::getStormQueries();
+
+        $items = $queries
+            ->select('customers')
             ->where('country', '<>', 'USA')
             ->findAll();
 
@@ -42,8 +48,10 @@ final class WhereTest extends TestCase
 
     public function testWhereWithNotWordEqual(): void
     {
-        $items = self::$queries
-            ->from('customers')
+        $queries = ConnectionProvider::getStormQueries();
+
+        $items = $queries
+            ->select('customers')
             ->where('country', 'NOT', 'USA')
             ->findAll();
 
@@ -52,8 +60,10 @@ final class WhereTest extends TestCase
 
     public function testWhereIn(): void
     {
-        $items = self::$queries
-            ->from('customers')
+        $queries = ConnectionProvider::getStormQueries();
+
+        $items = $queries
+            ->select('customers')
             ->where('country', 'IN', ['USA', 'Germany'])
             ->findAll();
 
@@ -62,8 +72,10 @@ final class WhereTest extends TestCase
 
     public function testWhereNotIn(): void
     {
-        $items = self::$queries
-            ->from('customers')
+        $queries = ConnectionProvider::getStormQueries();
+
+        $items = $queries
+            ->select('customers')
             ->where('country', 'NOT IN', ['Germany', 'USA'])
             ->findAll();
 
@@ -72,8 +84,10 @@ final class WhereTest extends TestCase
 
     public function testWhereGreater(): void
     {
-        $items = self::$queries
-            ->from('customers')
+        $queries = ConnectionProvider::getStormQueries();
+
+        $items = $queries
+            ->select('customers')
             ->where('customer_id', '>', 89)
             ->findAll();
 
@@ -82,8 +96,10 @@ final class WhereTest extends TestCase
 
     public function testWhereGreaterEqual(): void
     {
-        $items = self::$queries
-            ->from('customers')
+        $queries = ConnectionProvider::getStormQueries();
+
+        $items = $queries
+            ->select('customers')
             ->where('customer_id', '>=', 89)
             ->findAll();
 
@@ -92,8 +108,10 @@ final class WhereTest extends TestCase
 
     public function testWhereLess(): void
     {
-        $items = self::$queries
-            ->from('customers')
+        $queries = ConnectionProvider::getStormQueries();
+
+        $items = $queries
+            ->select('customers')
             ->where('customer_id', '<', 5)
             ->findAll();
 
@@ -102,8 +120,10 @@ final class WhereTest extends TestCase
 
     public function testWhereLessEqual(): void
     {
-        $items = self::$queries
-            ->from('customers')
+        $queries = ConnectionProvider::getStormQueries();
+
+        $items = $queries
+            ->select('customers')
             ->where('customer_id', '<=', 5)
             ->findAll();
 
@@ -112,8 +132,10 @@ final class WhereTest extends TestCase
 
     public function testWherePercentLike(): void
     {
-        $items = self::$queries
-            ->from('customers')
+        $queries = ConnectionProvider::getStormQueries();
+
+        $items = $queries
+            ->select('customers')
             ->where('customer_name', 'LIKE', '%a')
             ->findAll();
 
@@ -122,8 +144,10 @@ final class WhereTest extends TestCase
 
     public function testWhereLikePercent(): void
     {
-        $items = self::$queries
-            ->from('customers')
+        $queries = ConnectionProvider::getStormQueries();
+
+        $items = $queries
+            ->select('customers')
             ->where('customer_name', 'LIKE', 'A%')
             ->findAll();
 
@@ -132,8 +156,10 @@ final class WhereTest extends TestCase
 
     public function testWherePercentLikePercent(): void
     {
-        $items = self::$queries
-            ->from('customers')
+        $queries = ConnectionProvider::getStormQueries();
+
+        $items = $queries
+            ->select('customers')
             ->where('customer_name', 'LIKE', '%z%')
             ->findAll();
 
@@ -142,8 +168,10 @@ final class WhereTest extends TestCase
 
     public function testWhereIsNull(): void
     {
-        $items = self::$queries
-            ->from('shippers')
+        $queries = ConnectionProvider::getStormQueries();
+
+        $items = $queries
+            ->select('shippers')
             ->where('phone', 'IS NULL')
             ->findAll();
 
@@ -152,8 +180,10 @@ final class WhereTest extends TestCase
 
     public function testWhereIsNotNull(): void
     {
-        $items = self::$queries
-            ->from('shippers')
+        $queries = ConnectionProvider::getStormQueries();
+
+        $items = $queries
+            ->select('shippers')
             ->where('phone', 'IS NOT NULL')
             ->findAll();
 
@@ -162,8 +192,10 @@ final class WhereTest extends TestCase
 
     public function testWhereBetween(): void
     {
-        $items = self::$queries
-            ->from('customers')
+        $queries = ConnectionProvider::getStormQueries();
+
+        $items = $queries
+            ->select('customers')
             ->where('customer_id', 'BETWEEN', 10 , 20)
             ->findAll();
 
@@ -172,8 +204,10 @@ final class WhereTest extends TestCase
 
     public function testStringWhere(): void
     {
-        $items = self::$queries
-            ->from('customers')
+        $queries = ConnectionProvider::getStormQueries();
+
+        $items = $queries
+            ->select('customers')
             ->where('customer_name LIKE ? and country = ?', ['%a', 'Brazil'])
             ->findAll();
 
@@ -182,16 +216,13 @@ final class WhereTest extends TestCase
 
     public function testWhereArray(): void
     {
-        $items = self::$queries
-            ->from('customers')
+        $queries = ConnectionProvider::getStormQueries();
+
+        $items = $queries
+            ->select('customers')
             ->where(['country' => 'France', 'city' => 'Paris'])
             ->findAll();
 
         $this->assertCount(2, $items);
-    }
-
-    public static function setUpBeforeClass(): void
-    {
-        self::$queries = ConnectionProvider::getStormQueries();
     }
 }

@@ -25,7 +25,7 @@ final class InsertTest extends TestCase
             ['name' => 'name3']
         ]);
 
-        $this->assertEquals(4, $this->queries->from('insert_test')->count());
+        $this->assertEquals(4, $this->queries->count('insert_test'));
     }
 
     public function setUp(): void

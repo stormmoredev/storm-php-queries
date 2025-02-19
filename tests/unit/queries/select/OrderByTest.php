@@ -13,7 +13,7 @@ final class OrderByTest extends TestCase
     public function testOrderByAsc(): void
     {
         $query = $this->queries
-            ->from('customers')
+            ->select('customers')
             ->orderByAsc('customer_id');
 
         $line = get_nth_line($query->getSql(), 2);
@@ -24,7 +24,7 @@ final class OrderByTest extends TestCase
     public function testOrderByDesc(): void
     {
         $query = $this->queries
-            ->from('customers')
+            ->select('customers')
             ->orderByDesc('customer_id');
 
         $line = get_nth_line($query->getSql(), 2);
@@ -35,7 +35,7 @@ final class OrderByTest extends TestCase
     public function testOrderByAscThenOrderByDesc(): void
     {
         $query = $this->queries
-            ->from('customers')
+            ->select('customers')
             ->orderByAsc('customer_id')
             ->orderByDesc('customer_name');
 

@@ -13,8 +13,7 @@ final class SelectTest extends TestCase
     public function testFindOne(): void
     {
         $item = self::$queries
-            ->selectQuery('*')
-            ->from('customers')
+            ->select('customers')
             ->where('city', 'London')
             ->find();
 
@@ -24,8 +23,7 @@ final class SelectTest extends TestCase
     public function testFindAll(): void
     {
         $items = self::$queries
-            ->selectQuery('*')
-            ->from('customers')
+            ->select('customers')
             ->where('city', 'London')
             ->findAll();
 

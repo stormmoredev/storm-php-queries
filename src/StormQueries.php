@@ -90,14 +90,7 @@ readonly class StormQueries
         }
         $query->execute();
     }
-
-    public function selectQuery(...$fields): SelectQuery
-    {
-        $selectQuery = new SelectQuery($this->connection);
-        call_user_func_array([$selectQuery, 'select'], func_get_args());
-        return $selectQuery;
-    }
-
+    
     public function from(string|SubQuery $set, Map $map = null): SelectQuery
     {
         $selectQuery = new SelectQuery($this->connection);

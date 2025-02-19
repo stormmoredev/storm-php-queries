@@ -9,11 +9,11 @@ use Stormmore\Queries\Queries\InsertQuery;
 
 final class InsertTest extends TestCase
 {
-    private InsertQuery $insert;
+    private InsertQuery $insertQuery;
 
     public function testInsertSql(): void
     {
-        $query = $this->insert
+        $query = $this->insertQuery
             ->into('Users')
             ->setRecord([
                 'name' => 'John Doe',
@@ -27,7 +27,7 @@ final class InsertTest extends TestCase
 
     public function testInsertParameters(): void
     {
-        $query = $this->insert
+        $query = $this->insertQuery
             ->into('Users')
             ->setRecord([
                 'name' => 'John Doe',
@@ -42,6 +42,6 @@ final class InsertTest extends TestCase
     protected function setUp(): void
     {
         $mock = $this->createMock(IConnection::class);
-        $this->insert = new InsertQuery($mock);
+        $this->insertQuery = new InsertQuery($mock);
     }
 }

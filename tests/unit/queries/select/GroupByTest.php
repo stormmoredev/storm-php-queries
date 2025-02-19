@@ -13,8 +13,7 @@ final class GroupByTest extends TestCase
     public function testGroupBy(): void
     {
         $query = $this->queries
-            ->selectQuery('country, city, count(*)')
-            ->from('customers')
+            ->select('customers', 'country, city, count(*)')
             ->groupBy('country, city, count(*)');
 
         $sql = $query->getSql();

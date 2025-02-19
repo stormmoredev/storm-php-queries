@@ -12,8 +12,8 @@ class ParametersTest extends TestCase
 
     public function testParameters(): void
     {
-        $this->selectQuery->select('*')
-            ->from('customers')
+        $this->selectQuery
+            ->select('customers')
             ->where('id', 7)
             ->where('id', '>', 10)
             ->where('id', 'BETWEEN', 50, 70)

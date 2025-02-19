@@ -9,11 +9,11 @@ use Stormmore\Queries\Queries\UpdateQuery;
 
 final class UpdateTest extends TestCase
 {
-    private UpdateQuery $update;
+    private UpdateQuery $updateQuery;
 
     public function testUpdateSql(): void
     {
-        $query = $this->update
+        $query = $this->updateQuery
             ->update('Users')
             ->setValues([
                 'name' => 'John Doe',
@@ -28,7 +28,7 @@ final class UpdateTest extends TestCase
 
     public function testUpdateParameters(): void
     {
-        $query = $this->update
+        $query = $this->updateQuery
             ->update('Users')
             ->setValues([
                 'name' => 'John Doe',
@@ -44,6 +44,6 @@ final class UpdateTest extends TestCase
     protected function setUp(): void
     {
         $mock = $this->createMock(IConnection::class);
-        $this->update = new UpdateQuery($mock);
+        $this->updateQuery = new UpdateQuery($mock);
     }
 }

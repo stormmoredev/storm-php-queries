@@ -131,7 +131,7 @@ $connection = ConnectionFactory::createFromString(
 $queries = new StormQueries($connection);
 
 $queries
-  ->from('customers c',  Map::select([
+  ->select('customers c',  Map::select([
       'customer_id' => 'id',
       'customer_name' => 'name'
   ]))
@@ -163,16 +163,15 @@ foreach($customers as $customer) {
     }
 }                   
 ```
-Build select query with `from` method
 
-```php
-$queries->from('tableName', 'id = ?', 2)->find();
-```
+<a name="selectquery"></a>
+## Select query
+
+Build select query with `select` method
 Build it with fluent API
 ```php
 $queries
-    ->select("column1", "column2", "column3")
-    ->from('tableName')
+    ->select("table", "column1", "column2", "column3")
     ->where('id', 2);
     ->find();
 ```
@@ -195,44 +194,36 @@ $queries->select('columnA')->select('columnB')->select('columnC');
 ```
 builds `SELECT columnA, columnB, columnC`
 
-### Short select
-```php
-$queries->from('customers')->find();
-$queries->from('customers', 'name LIKE ? AND city = ?', 'M%' 'London')->find();
-$queries->from('customers', 'id = ?', 14]->find();
-$queries->from('customers')->where('id', 14)->find();
-```
-
 <a name="aggregatefunctions"></a>
 ### Aggregation functions 
 
  ```php
-$queries->from('products', 'category_id = ?', 7)->count();
-$queries->from('products', 'category_id = ?', 7)->min('price');
-$queries->from('products', 'category_id = ?', 7)->max('price');
-$queries->from('products', 'category_id = ?', 7)->sum('price');
-$queries->from('products', 'category_id = ?', 7)->avg('price');
+$queries->select('products')->count();
+$queries->select('products')->min('price');
+$queries->select('products')->max('price');
+$queries->select('products')->sum('price');
+$queries->select('products')->avg('price');
  ```
 
 <a name="leftjoin"></a>
 ### Join/Left join 
 ```php
 $queries
-    ->from('tableA')
-    ->join('tableB', 'tableB.id', 'tableA.id')
+    ->select('tableA')
+    ->join('tableB', 'tableB.id = tableA.id')
     ->find();
 ```
 ```php
 $queries
-    ->from('tableA')
-    ->leftJoin('tableB', 'tableB.id', 'tableA.id')
+    ->select('tableA')
+    ->leftJoin('tableB', 'tableB.id = tableA.id')
     ->find();
 ```
 <a name="where"></a>
 ### Where 
 ```php
 $queries
-    ->from('tableA')
+    ->select('tableA')
     ->where('column', 'val1')
     ->where('column', '=', 'val1')
     ->where('column', 'IN', ['val2', 'val3'])
@@ -256,7 +247,7 @@ Default conjunction is `AND`. To use `OR` use `orWhere`
 
 ```php
 $queries
-    ->from('tableA')
+    ->select('tableA')
     ->where('columnA', 'val1')
     ->orWhere('column', 'IN', ['val2', 'val3'])
 ```
@@ -265,7 +256,7 @@ $queries
 If you want to use group of conditions enclosed in parenthesis use closure
 ```php
 $queries
-    ->from('tableA')
+    ->select('tableA')
     ->where('columnA', 'val1')
     ->where(function($query) {
         $query->where('column', 'val2')->orWhere('column', 'val3')
@@ -275,26 +266,25 @@ $queries
 <a name="orderby"></a>
 ### OrderBy
 ```php
-$queries->from('table')->orderByDesc('column1');
-$queries->from('table')->orderByAsc('column1');
-$queries->from('table')->orderBy('column1', -1); //descending 
-$queries->from('table')->orderBy('column1', 1) //ascending
-$queries->from('table')->orderByDesc('column1')->orderByDesc('column2');
+$queries->select('table')->orderByDesc('column1');
+$queries->select('table')->orderByAsc('column1');
+$queries->select('table')->orderBy('column1', -1); //descending 
+$queries->select('table')->orderBy('column1', 1) //ascending
+$queries->select('table')->orderByDesc('column1')->orderByDesc('column2');
 ```
 
 <a name="groupby"></a>
 ### GroupBy
 ```php
-$queries->from('table')->groupBy('column1', 'column2');
-$queries->from('table')->groupBy('column1')->groupBy('column2')->groupBy('column3')
+$queries->select('table')->groupBy('column1', 'column2');
+$queries->select('table')->groupBy('column1')->groupBy('column2')->groupBy('column3')
 ```
 <a name="having"></a>
 ### Having 
 Everything what refers to `where` or `orWhere` refers to `having` and `orHaving`
 ```php
 $queries
-    ->select('country, city, count(*)')
-    ->from('customers')
+    ->select('cutomers', 'country, city, count(*)')
     ->groupBy('country, city')
     ->having('count(*)', '>', 1)
     ->having('city', 'LIKE', '%o%')
@@ -315,7 +305,7 @@ Map defines
 ### From
 ```php
 $queries
-  ->from('customers', 'customer_id = ?', 28, Map::select([
+  ->select('customers', 'customer_id = ?', 28, Map::select([
       'customer_id' => 'id',
       'customer_name' => 'name'
   ]))
@@ -324,7 +314,7 @@ $queries
 #### Map to user class
 ```php
 $queries
-  ->from('customers',  Map::select([
+  ->select('customers',  Map::select([
       'customer_id' => 'id',
       'customer_name' => 'name'
   ], Customer::class))
@@ -334,7 +324,7 @@ $queries
 #### Map as combination of index and associative array 
 ```php
 $queries
-  ->from('customers',  Map::select([
+  ->select('customers',  Map::select([
       'customer_id' => 'id',
       'customer_name' => 'name',
       'city', 
@@ -348,7 +338,7 @@ $queries
 #### One-to-one relationship
 ```php
 $orders = $queries
-  ->from('orders o', Map::select("orders", [
+  ->select('orders o', Map::select("orders", [
     'order_id' => 'id',
     'order_date' => 'date'
   ]))
@@ -367,7 +357,7 @@ foreach($orders as $order) {
 #### One-to-one non-hierarchical relationship
 ```php
 $products = $this->queries
-  ->from('products p', Map::select([
+  ->select('products p', Map::select([
       'p.product_id' => 'id',
       'p.product_name' => 'name',
       's.supplier_name' => 'supplierName',
@@ -385,7 +375,7 @@ foreach($products as $product) {
 #### One-to-many relationship
 ```php
 $queries
-  ->from('customers c',  Map::select([
+  ->select('customers c',  Map::select([
       'customer_id' => 'id',
       'customer_name' => 'name'
   ]))
@@ -396,7 +386,7 @@ $queries
 #### Many-to-many relationship
 ```php
 $queries
-  ->from('products p', Map::select([
+  ->select('products p', Map::select([
       'product_id' => 'id',
       'product_name' => 'name'
   ]))
@@ -415,8 +405,8 @@ $queries
 #### from
 ```php
 $queries
-->from(
-    SubQuery::create($queries->from('products'), 'p')
+->select(
+    SubQuery::create($queries->select('products'), 'p')
 )
 ->where('p.product_id', 7)
 ->find();
@@ -424,7 +414,7 @@ $queries
 #### left join
 ```php
 $queries
-->from(
+->select(
     SubQuery::create($queries->from('products'), 'p')
 )
 ->leftJoin(
@@ -436,7 +426,7 @@ $queries
 #### where 
 ```php
 $queries
-->from("products")
+->select("products")
 ->where("category_id", 1)
 ->where('price', '<=',
     $queries
@@ -455,7 +445,7 @@ Using joins requires using aliases in `from` and `join` clause.
 
 ```php 
 $query = $queries
-    ->from('products')
+    ->select('products')
     ->join('product_photos', 'product_photos.product_id', 'products.id')
     ->where('is_in_sale', true);
 if ($criteria->hasCategory()) {
@@ -474,11 +464,11 @@ $products = $query->findAll();
 <a name="insertquery"></a>
 ## Insert
 ```php
-$id = $queries->insert('person', ['name' => 'Micheal'])->execute();
+$id = $queries->insert('person', ['name' => 'Micheal']);
 ```
 If you don't want to invoke `getLastInsertedId` on `PDO` pass `false` to `execute` method
 ```php
-$queries->insert('person', ['name' => 'Micheal'])->execute(false);
+$queries->insertQuery('person', ['name' => 'Micheal'])->execute(false);
 ```
 
 ### Insert many
@@ -493,32 +483,39 @@ $queries
 ```
 
 <a name="updatequery"></a>
-## Update 
+## Update
 ```php
-$queries->update('person')->where('id', 2)->setValues(['name' => 'Matthew'])->execute();
+$queries->update('person', 'id = ?', 2, ['name' => 'Matthew']);
 ```
 or
 ```php
-$queries->update('person', 'id = ?', 2, ['name' => 'Matthew'])->execute();
+$queries->update('person', ['id' => 2], ['name' => 'Matthew']);
 ```
 or 
 ```php
-$queries->update('products', 'id = ?', 2)->setExpression('price = price + 5')->execute()
+$queries->updateQuery('products')->where('id', 3)->set('price = price + 5')->execute();
 ```
+or
+```php
+$queries->updateQuery('person')->where('id', 2)->set(['name' => 'Matthew'])->execute();
+```
+
 
 <a name="deletequery"></a>
 ## Delete 
 ```php
-$queries->delete('person')->where('id', 1)->execute();
+$queries->delete('person', 'id = ?', 1);
 ```
 or
 ```php
-$queries->delete('person', 'id = ?', 1)->execute();
+$queries->delete('person', ['id' => 1]);
 ```
 or
 ```php
-$queries->delete('person', ['id' => 1])->execute();
+$queries->deleteQuery('person')->where('id', 1)->execute();
 ```
+
+
 
 <a name="profiling"></a>
 ## Profiling nad logging queries

@@ -15,10 +15,11 @@ readonly class StormQueries
     {
     }
 
-    public function insertQuery(string $table):InsertQuery
+    public function insertQuery(string $table, array $record):InsertQuery
     {
         $query = new InsertQuery($this->connection);
         $query->into($table);
+        $query->setRecord($record);
         return $query;
     }
 
@@ -90,7 +91,7 @@ readonly class StormQueries
         }
         $query->execute();
     }
-    
+
     public function select(string|SubQuery $table, mixed ...$parameters): SelectQuery
     {
         $map = null;

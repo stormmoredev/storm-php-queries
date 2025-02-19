@@ -13,8 +13,7 @@ final class GroupByTest extends TestCase
     public function testGroupBY(): void
     {
         $items = self::$queries
-            ->selectQuery('country, city, count(*)')
-            ->from('customers')
+            ->select('customers', 'country, city, count(*)')
             ->groupBy('country, city')
             ->findAll();
 

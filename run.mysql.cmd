@@ -1,0 +1,1 @@
+./vendor/bin/phpunit --display-deprecations --display-warnings --bootstrap tests\mysql.php tests

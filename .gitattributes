@@ -1,0 +1,16 @@
+.idea export-ignore
+.gitignore export-ignore
+.gitattributes export-ignore
+composer.lock export-ignore
+README.MD export-ignore
+LICENSE export-ignore
+docker-compose.yml export-ignore
+
+/tests export-ignore
+
+run.all.cmd export-ignore
+run.mariadb.cmd export-ignore
+run.mysql.cmd export-ignore
+run.postgres.cmd export-ignore
+run.sqlite.cmd export-ignore
+run.sqlserver.cmd export-ignore

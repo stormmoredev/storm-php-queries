@@ -1,0 +1,31 @@
+services:
+  postgres:
+    image: postgres:16-alpine3.18
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "7800:5432"
+  mysql:
+    image: mysql
+    environment:
+      MYSQL_DATABASE: storm_test
+      MYSQL_ROOT_PASSWORD: mysql
+      MYSQL_USER: mysql
+      MYSQL_PASSWORD: mysql
+    ports:
+      - "7801:3306"
+  maria:
+    image: mariadb
+    environment:
+      MARIADB_ROOT_PASSWORD: mariadb
+    ports:
+      - "7802:3306"
+  sqlserver:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    environment:
+      - ACCEPT_EULA=Y
+      - MSSQL_SA_PASSWORD=Sqlserver123
+      - MSSQL_PID=Developer
+    ports:
+      - "7803:1433"

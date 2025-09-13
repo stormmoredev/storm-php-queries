@@ -1,0 +1,5 @@
+.idea
+vendor/
+database.sqlite
+
+.DS_Store

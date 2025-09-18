@@ -42,7 +42,7 @@ class JoinTest extends TestCase
                 'customer_id' => 'id',
                 'customer_name' => 'name'
             ]))
-            ->leftJoin('orders', 'orders.customer_id = c.customer_id', Map::many("orders", [
+            ->leftJoin('orders', ['orders.customer_id' => 'c.customer_id'], Map::many("orders", [
                 'order_id' => 'id'
             ]));
     }
@@ -58,6 +58,23 @@ class JoinTest extends TestCase
             ]));
     }
 
+    public function testSimpleJoin(): void
+    {
+        $c = $this->queries
+            ->select('customers c',  Map::select([
+                'customer_id',
+                'customer_name'
+            ], classId: 'customer_id'))
+            ->leftJoin('orders o', 'o.customer_id = c.customer_id', Map::many("orders", [
+                'order_id'
+            ],classId: 'order_id'))
+            ->find();
+
+        $this->assertEquals(90, $c->customer_id);
+        $this->assertEquals('Wilman Kala', $c->customer_name);
+        $this->assertCount(1, $c->orders);
+    }
+
     public function testManyToManyJoin(): void
     {
         $products = $this->queries
@@ -65,7 +82,7 @@ class JoinTest extends TestCase
                 'product_id' => 'id',
                 'product_name' => 'name'
             ]))
-            ->leftJoin('products_tags pt', 'pt.product_id = p.product_id', Map::join())
+            ->leftJoin('products_tags pt', ['pt.product_id' => 'p.product_id'], Map::join())
             ->leftJoin('tags t', 't.tag_id = pt.tag_id', Map::many("tags", [
                 'tag_id' => 'id',
                 'name' => 'name'

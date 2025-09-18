@@ -153,7 +153,7 @@ $queries->select('products')->avg('price');
 ```php
 $queries
 ->select('tableA')
-->join('tableB', 'tableB.id = tableA.id')
+->join('tableB', ['tableB.id' => 'tableA.id')
 ->find();
 //or
 $queries
@@ -165,7 +165,7 @@ $queries
 ```php
 $queries
 ->select('tableA')
-->leftJoin('tableB', 'tableB.id = tableA.id')
+->leftJoin('tableB', ['tableB.id' => 'tableA.id'])
 ->find();
 //or
 $queries
@@ -239,7 +239,7 @@ $orders = $queries
 'order_id'   => 'id',
 'order_date' => 'date'
 ]))
-->leftJoin('shippers sh', 'sh.shipper_id = o.shipper_id', Map::one('shipper', [
+->leftJoin('shippers sh', ['sh.shipper_id' => 'o.shipper_id'], Map::one('shipper', [
     'shipper_id'   => 'id',
     'shipper_name' => 'name'
 ]))
@@ -271,7 +271,7 @@ Left Join:
 ```php
 $queries
 ->select(SubQuery::create($queries->from('products'), 'p'))
-->leftJoin(SubQuery::create($queries->from('suppliers'), 's'), 's.supplier_id = p.supplier_id')
+->leftJoin(SubQuery::create($queries->from('suppliers'), 's'), ['s.supplier_id' => 'p.supplier_id'])
 ->findAll();
 ```
 
@@ -296,7 +296,7 @@ $queries
 ```php
 $query = $queries
 ->select('products')
-->join('product_photos', 'product_photos.product_id = products.id')
+->join('product_photos', ['product_photos.product_id' => 'products.id'])
 ->where('is_in_sale', true);
 
 if ($criteria->hasCategory()) {

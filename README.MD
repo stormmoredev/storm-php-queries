@@ -1,4 +1,3 @@
-
 # StormPHP Queries
 
 A lightweight **query builder** and **ORM** for PHP.

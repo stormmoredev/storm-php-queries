@@ -33,7 +33,7 @@ class QueriesTest extends TestCase
     {
         $queries = ConnectionProvider::getStormQueries();
 
-        $customer = $queries->find('customers', 'customer_id = ?', 7, Map::select([
+        $customer = $queries->find('customers', ['customer_id' => 7], Map::select([
             'customer_id' => 'id',
             'customer_name' => 'name'
         ]));

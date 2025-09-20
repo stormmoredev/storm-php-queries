@@ -15,6 +15,31 @@ readonly class StormQueries
     {
     }
 
+    public function execute(string $cmd, array $parameters = []): bool
+    {
+        return $this->connection->execute($cmd, $parameters);
+    }
+
+    public function query(string $query, array $parameters = []): array
+    {
+        return $this->connection->query($query, $parameters);
+    }
+
+    public function begin(): void
+    {
+        $this->connection->begin();
+    }
+
+    public function commit(): void
+    {
+        $this->connection->commit();
+    }
+
+    public function rollback(): void
+    {
+        $this->connection->rollback();
+    }
+
     public function insertQuery(string $table, array $record):InsertQuery
     {
         $query = new InsertQuery($this->connection);

@@ -131,11 +131,19 @@ $queries
 ->find();
 ```
 
+Using aliases
+```php
+$queries
+->select("table", ["column1" => 'colA', "column2"])
+->where('id', 2)
+->find();
+```
+
+
 Each method (`select`, `join`, `leftJoin`, `where`, `orderBy`, etc.) **adds** parameters instead of replacing them.
 
 ```php
 $queries->select('columnA')->select('columnB')->select('columnC');
-// SELECT columnA, columnB, columnC
 ```
 
 ### Aggregation Functions
@@ -246,6 +254,13 @@ $orders = $queries
 ->findAll();
 ```
 
+For the ORM to work without additional configuration:
+
+- each record must have a **unique identifier** (by default `id`, but this can be changed using the `classId` parameter),
+- tables in the query must have **aliases**.
+
+This allows StormQueries to map records to user-defined objects, even if the key fields differ from the standard `id`.
+
 Supports:
 
 * One-to-one
@@ -327,9 +342,9 @@ Insert many:
 ```php
 $queries
 ->insertMany('person', [
-['name' => 'Michael'],
-['name' => 'Kevin'],
-['name' => 'LeBron']
+    ['name' => 'Michael'],
+    ['name' => 'Kevin'],
+    ['name' => 'Martin']
 ])
 ->execute();
 ```

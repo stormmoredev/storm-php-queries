@@ -121,6 +121,30 @@ $customers = $queries
     ->findAll();
 ```
 
+For the ORM to work without additional configuration:
+ - each record must have a unique identifier (by default id, but this can be changed using the classId parameter),
+ - tables in the query must have aliases.
+
+This allows StormQueries to map records to user-defined objects, even if the key fields differ from the standard id.
+
+```php
+$customer = $this->queries
+    ->select('customers c', Map::select([
+        'customer_id',
+        'customer_name'
+    ], Customer::class, classId: 'customer_id'))
+    ->leftJoin('orders o', 'o.customer_id = c.customer_id', Map::many("orders", [
+        'order_id'
+    ], Order::class, classId: 'order_id'))
+    ->where('c.customer_id', 90)
+    ->find();
+
+foreach ($customer->orders as $order) {
+    echo $customer->customer_name . " - " . $order->id;
+}
+
+```
+
 ---
 
 ## Guide

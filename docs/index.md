@@ -30,12 +30,14 @@ It’s **intuitive, lightweight, and flexible** — with zero configuration requ
 7. [Insert](#insert)
 8. [Update](#update)
 9. [Delete](#delete)
-10. [Profiling and Logging](#profiling-and-logging)
-11. [Notice](#notice)
-12. [Tests](#tests)
-13. [Examples](#examples)
-14. [Author](#author)
-15. [License](#license)
+10. [Transactions](#transactions)
+11. [RawQueries](#rawqueries)
+12. [Profiling and Logging](#profiling-and-logging)
+13. [Notice](#notice)
+14. [Tests](#tests)
+15. [Examples](#examples)
+16. [Author](#author)
+17. [License](#license)
 
 ---
 
@@ -380,6 +382,26 @@ Or with query builder:
 $queries->deleteQuery('person')->where('id', 1)->execute();
 ```
 
+## Transactions
+```php
+try {
+    $queries->begin();
+    // your queries
+    $queries->commit();
+}
+catch(Throwable $throwable) {
+    $queries->rollback();
+    throw $throwable;
+}
+```
+---
+
+## Raw queries
+```php
+$queries->execute("CREATE SCHEMA storm_test");
+
+$items = $queries->query("SELECT * FROM customers WHERE customer_id = ?", [7]);
+```
 ---
 
 ## Profiling and Logging

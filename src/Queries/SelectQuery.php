@@ -132,7 +132,7 @@ class SelectQuery
         return $this->selectQuery->getParameters();
     }
 
-    public function  find(): ?object
+    public function find(): ?object
     {
         $results = $this->findAll();
         return count($results) > 0 ? $results[0] : null;

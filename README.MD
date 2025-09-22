@@ -150,7 +150,7 @@ foreach ($customer->orders as $order) {
 ## Guide
 
 Looking for more?
-The full guide includes detailed sections on **Select Queries, ORM, Subqueries, Insert/Update/Delete, Profiling, and more.**
+The full guide includes detailed sections on **Select Queries, ORM, Subqueries, Insert/Update/Delete, Union, Profiling, and more.**
 
 👉 Read here: [Full Documentation – docs/guide.md](https://stormmoredev.github.io/storm-php-queries/)
 

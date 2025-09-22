@@ -30,14 +30,15 @@ It’s **intuitive, lightweight, and flexible** — with zero configuration requ
 7. [Insert](#insert)
 8. [Update](#update)
 9. [Delete](#delete)
-10. [Transactions](#transactions)
-11. [RawQueries](#rawqueries)
-12. [Profiling and Logging](#profiling-and-logging)
-13. [Notice](#notice)
-14. [Tests](#tests)
-15. [Examples](#examples)
-16. [Author](#author)
-17. [License](#license)
+10. [Union](#union)
+11. [Transactions](#transactions)
+12. [RawQueries](#rawqueries)
+13. [Profiling and Logging](#profiling-and-logging)
+14. [Notice](#notice)
+15. [Tests](#tests)
+16. [Examples](#examples)
+17. [Author](#author)
+18. [License](#license)
 
 ---
 
@@ -369,6 +370,13 @@ $queries->updateQuery('products')
 ```
 
 ---
+
+## Union
+```php
+$suppliers = $queries->select('suppliers', 'contact_name')->where('contact_name', 'LIKE', '%Michael%');
+$customers = $queries->select('customers', 'contact_name')->where('contact_name', 'LIKE', '%Maria%');
+$items = $queries->union($suppliers, $customers)->find();
+```
 
 ## Delete
 

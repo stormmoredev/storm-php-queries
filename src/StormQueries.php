@@ -7,6 +7,7 @@ use Stormmore\Queries\Queries\DeleteQuery;
 use Stormmore\Queries\Queries\InsertQuery;
 use Stormmore\Queries\Queries\SelectQuery;
 use Stormmore\Queries\Queries\SubQuery;
+use Stormmore\Queries\Queries\UnionQuery;
 use Stormmore\Queries\Queries\UpdateQuery;
 
 readonly class StormQueries
@@ -134,6 +135,11 @@ readonly class StormQueries
             $selectQuery->select("*");
         }
         return $selectQuery;
+    }
+
+    public function union(SelectQuery ...$queries): UnionQuery
+    {
+        return new UnionQuery($this->connection, $queries);
     }
 
     public function find(string $table, string|array $where, mixed ... $parameters): ?object

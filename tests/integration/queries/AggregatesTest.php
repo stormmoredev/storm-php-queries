@@ -51,4 +51,13 @@ final class AggregatesTest extends TestCase
 
         $this->assertEquals(28.86636, round($avg, 5));
     }
+
+    public function testDistinctFunction(): void
+    {
+        $queries = ConnectionProvider::getStormQueries();
+
+        $countries = $queries->select('customers')->distinct('country');
+
+        $this->assertCount(21, $countries);
+    }
 }

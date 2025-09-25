@@ -157,6 +157,7 @@ $queries->select('products')->min('price');
 $queries->select('products')->max('price');
 $queries->select('products')->sum('price');
 $queries->select('products')->avg('price');
+$queries->select('customers')->distinct('country');
 ```
 
 ### Join / Left Join
@@ -377,6 +378,7 @@ $suppliers = $queries->select('suppliers', 'contact_name')->where('contact_name'
 $customers = $queries->select('customers', 'contact_name')->where('contact_name', 'LIKE', '%Maria%');
 $items = $queries->union($suppliers, $customers)->find();
 ```
+---
 
 ## Delete
 
@@ -389,7 +391,7 @@ Or with query builder:
 ```php
 $queries->deleteQuery('person')->where('id', 1)->execute();
 ```
-
+---
 ## Transactions
 ```php
 try {

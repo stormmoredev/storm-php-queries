@@ -77,6 +77,18 @@ Find all products in a category:
 $products = $queries->findAll('products', ['category_id' => 10]);
 ```
 
+Find products by complex criteria
+```php
+$queries->findAll('customers', 'country = ? and customer_name LIKE ?', 'France', '%La%');
+```
+
+Find products and map
+```php
+$products = $queries->find('products', ['category_id' => 7], Map::select([
+    'product_it' => 'id',
+    'product_name' => 'name'
+], Product::class));
+```
 Insert:
 
 ```php

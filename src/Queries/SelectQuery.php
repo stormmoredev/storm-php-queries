@@ -196,4 +196,11 @@ class SelectQuery
         $this->selectQuery->select('sum(' . $column . ') as _sum');
         return $this->find()->_sum;
     }
+
+    public function distinct(string $column): array
+    {
+        $this->selectQuery->clearSelect();
+        $this->selectQuery->select('distinct(' . $column . ')');
+        return $this->findAll();
+    }
 }
